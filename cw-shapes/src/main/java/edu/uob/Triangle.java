@@ -1,7 +1,7 @@
 package edu.uob;
 
 public class Triangle extends TwoDimensionalShape {
-  private int a, b, c;
+  private long a, b, c;
   private TriangleVariant triangleShape;
 
   // TODO implement me!
@@ -25,7 +25,7 @@ public class Triangle extends TwoDimensionalShape {
       triangleShape = TriangleVariant.FLAT;
     } if ((a + b < c) || (b + c < a) || (c + a < b)){
       triangleShape = TriangleVariant.IMPOSSIBLE;
-    } if ((a < 0) || (b < 0) || (c < 0)){
+    } if ((a <= 0) || (b <= 0) || (c <= 0)){
       triangleShape = TriangleVariant.ILLEGAL;
     }
   }
@@ -34,7 +34,7 @@ public class Triangle extends TwoDimensionalShape {
     return triangleShape;
   }
 
-  public int getLongestSide() {
+  public long getLongestSide() {
     if (a > b && a > c){
       return a;
     }
