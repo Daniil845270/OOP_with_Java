@@ -1,6 +1,6 @@
 package edu.uob;
 
-public class Triangle extends TwoDimensionalShape {
+public class Triangle extends TwoDimensionalShape implements MultiVariantShape {
   private long a, b, c;
   private TriangleVariant triangleShape;
 
@@ -17,9 +17,9 @@ public class Triangle extends TwoDimensionalShape {
       triangleShape = TriangleVariant.EQUILATERAL;
     } if (a != b && b != c && c != a) {
       triangleShape = TriangleVariant.SCALENE;
-    } if ((Math.pow(a, 2) + Math.pow(b, 2) == Math.pow(c, 2)) ||
-          (Math.pow(c, 2) + Math.pow(b, 2) == Math.pow(a, 2)) ||
-          (Math.pow(a, 2) + Math.pow(c, 2) == Math.pow(b, 2))){
+    } if ((a*a == c*c - b*b) ||
+          (c*c == a*a - b*b) ||
+          (a*a == b*b - c*c)){
       triangleShape = TriangleVariant.RIGHT;
     } if ((a + b == c) || (b + c == a) || (c + a == b)){
       triangleShape = TriangleVariant.FLAT;
@@ -53,11 +53,17 @@ public class Triangle extends TwoDimensionalShape {
 
   // TODO implement me!
   public double calculateArea() {
-    return 0;
+    //Area = √[s(s-a)(s-b)(s-c)]
+    //s = p/2
+    //int s = calculatePerimeterLength()/2;
+    double s = (a + b + c)/2.0;
+    double area = Math.sqrt(s * (s - a) * (s - b) * (s - c));
+    return area;
   }
 
   // TODO implement me!
   public int calculatePerimeterLength() {
-    return 0;
+    int p = (int) (a + b + c);
+    return p;
   }
 }

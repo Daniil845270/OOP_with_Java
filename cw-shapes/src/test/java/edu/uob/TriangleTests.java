@@ -93,6 +93,6 @@ class TriangleTests {
   void testOverflow() {
     assertShapeVariant(TriangleVariant.SCALENE, new Triangle(1100000000, 1705032704, 1805032704));
     assertShapeVariant(TriangleVariant.SCALENE, new Triangle(2000000001, 2000000002, 2000000003));
-//    assertShapeVariant(TriangleVariant.SCALENE, new Triangle(150000002, 666666671, 683333338));
+    assertShapeVariant(TriangleVariant.SCALENE, new Triangle(150000002, 666666671, 683333338));
   }
 }
