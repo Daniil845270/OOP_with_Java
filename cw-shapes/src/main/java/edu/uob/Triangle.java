@@ -3,13 +3,15 @@ package edu.uob;
 public class Triangle extends TwoDimensionalShape implements MultiVariantShape {
   private long a, b, c;
   private TriangleVariant triangleShape;
+  static int populationTriangleSize = 0;
 
   // TODO implement me!
   public Triangle(int e, int f, int g) {
+    Triangle.populationTriangleSize++;
+
     this.a = e;
     this.b = f;
     this.c = g;
-
 
     if (a == b || b == c || c == a) {
       triangleShape = TriangleVariant.ISOSCELES;
@@ -28,6 +30,10 @@ public class Triangle extends TwoDimensionalShape implements MultiVariantShape {
     } if ((a <= 0) || (b <= 0) || (c <= 0)){
       triangleShape = TriangleVariant.ILLEGAL;
     }
+  }
+
+  public int getPopulation(){
+    return populationTriangleSize;
   }
 
   public TriangleVariant getVariant(){
