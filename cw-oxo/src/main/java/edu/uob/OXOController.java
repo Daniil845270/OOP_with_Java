@@ -46,8 +46,6 @@ public class OXOController implements Serializable {
         } else {
             System.out.println("Cell owner is already occupied");
         }
-
-
     }
     public void addRow() {}
     public void removeRow() {}
@@ -56,8 +54,9 @@ public class OXOController implements Serializable {
     public void increaseWinThreshold() {}
     public void decreaseWinThreshold() {}
     public void reset() {
+        //set the player to the first player
         gameModel.setCurrentPlayerNumber(0);
-//        gameModel.setGameDrawn(false);
+        //iterate through the 2D array and set the owner of each cell to null
         int rows = gameModel.getNumberOfRows();
         int cols = gameModel.getNumberOfColumns();
         for (int i = 0; i < rows; i++) {
@@ -65,5 +64,7 @@ public class OXOController implements Serializable {
                 gameModel.setCellOwner(i, j, null);
             }
         }
+        //optional: print to the console of the reinitialised board
+        System.out.println("Board is now reset!");
     }
 }
