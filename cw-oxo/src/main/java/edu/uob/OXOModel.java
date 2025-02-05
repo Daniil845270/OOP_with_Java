@@ -2,10 +2,12 @@ package edu.uob;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class OXOModel implements Serializable {
     @Serial private static final long serialVersionUID = 1;
-    private OXOPlayer[][] cells;
+//    private OXOPlayer[][] cells;
+    private ArrayList<ArrayList<OXOPlayer>> cells;
     private OXOPlayer[] players;
     private int currentPlayerNumber;
     private OXOPlayer winner;
@@ -14,7 +16,15 @@ public class OXOModel implements Serializable {
 
     public OXOModel(int numberOfRows, int numberOfColumns, int winThresh) {
         winThreshold = winThresh;
-        cells = new OXOPlayer[numberOfRows][numberOfColumns];
+//        cells = new OXOPlayer[numberOfRows][numberOfColumns];
+        cells = new ArrayList<>(numberOfRows);
+        for (int i = 0; i < numberOfRows; i++) {
+            ArrayList<OXOPlayer> rowList = new ArrayList<>(numberOfColumns);
+            for (int c = 0; c < numberOfColumns; c++) {
+                rowList.add(null);
+            }
+            cells.add(rowList);
+        }
         players = new OXOPlayer[2];
     }
 
@@ -52,19 +62,27 @@ public class OXOModel implements Serializable {
     }
 
     public int getNumberOfRows() {
-        return cells.length;
+        return cells.size();
     }
 
     public int getNumberOfColumns() {
-        return cells[0].length;
+        return cells.get(0).size();
     }
 
+//    public OXOPlayer getCellOwner(int rowNumber, int colNumber) {
+//        return cells[rowNumber][colNumber];
+//    }
+//
+//    public void setCellOwner(int rowNumber, int colNumber, OXOPlayer player) {
+//        cells[rowNumber][colNumber] = player;
+//    }
+
     public OXOPlayer getCellOwner(int rowNumber, int colNumber) {
-        return cells[rowNumber][colNumber];
+        return cells.get(rowNumber).get(colNumber);
     }
 
     public void setCellOwner(int rowNumber, int colNumber, OXOPlayer player) {
-        cells[rowNumber][colNumber] = player;
+        cells.get(rowNumber).set(colNumber, player);
     }
 
     public void setWinThreshold(int winThresh) {
@@ -83,4 +101,43 @@ public class OXOModel implements Serializable {
         return gameDrawn;
     }
 
+
+    //Don’t Remove Rows/Columns That Contain Moves - may implement later
+    public void addRow() {
+        if (getNumberOfRows() < 9) {
+            ArrayList<OXOPlayer> newList = new ArrayList<>(getNumberOfColumns());
+            for (int c = 0; c < getNumberOfColumns(); c++) {
+                newList.add(c, null);
+            }
+            cells.add(newList);
+        } else {
+            System.out.println("Too many rows");
+        }
+    }
+    public void addColumn() {
+        if (getNumberOfColumns() < 9) {
+            for (int r = 0; r < getNumberOfRows(); r++) {
+                cells.get(r).add(null);
+            }
+        } else {
+            System.out.println("Too many columns");
+        }
+    }
+    public void removeRow(){
+        if (getNumberOfRows() > 3){
+            cells.remove(getNumberOfRows() - 1);
+        } else {
+            System.out.println("Too few rows");
+        }
+    }
+    public void removeColumn(){
+        if (getNumberOfColumns() > 3){
+            for (int r = 0; r < getNumberOfRows(); r++) {
+                cells.get(r).remove(getNumberOfColumns() - 1);
+            }
+        } else {
+            System.out.println("Too few columns");
+        }
+
+    }
 }
