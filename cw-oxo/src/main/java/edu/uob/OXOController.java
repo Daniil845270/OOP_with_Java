@@ -73,10 +73,12 @@ public class OXOController implements Serializable {
             //top left diagonal check
             int lrow = rowNum;
             int lcol = colNum;
-            while ((lrow > 0) || (lcol > 0)) {
+            while ((lrow > 0) && (lcol > 0)) {
                 lrow--; lcol--;
             }
             for (; ((lrow < gameModel.getNumberOfRows() - 2) && (lcol < gameModel.getNumberOfColumns() - 2)); lrow++, lcol++) {
+                System.out.println(lrow);
+                System.out.println(lcol);
                 if (gameModel.getCellOwner(lrow, lcol) != null &&
                         (gameModel.getCellOwner(lrow, lcol) == gameModel.getCellOwner(lrow + 1, lcol + 1)) &&
                         (gameModel.getCellOwner(lrow, lcol) == gameModel.getCellOwner(lrow + 2, lcol + 2))) {
@@ -86,7 +88,7 @@ public class OXOController implements Serializable {
             //bottom left diagonal check, test this
             int rrow = rowNum;
             int rcol = colNum;
-            while ((rrow < gameModel.getNumberOfRows() - 2) || (rcol > 0)) {
+            while ((rrow < gameModel.getNumberOfRows() - 2) && (rcol > 0)) {
                 rrow++; rcol--;
             }
             for (;
