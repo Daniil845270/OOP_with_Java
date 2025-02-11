@@ -60,12 +60,155 @@ class ExampleControllerTests {
     assertEquals(firstMovingPlayer, model.getWinner(), failedTestComment);
   }
 
-  // Example of how to test for the throwing of exceptions
   @Test
-  void testInvalidIdentifierException() throws OXOMoveException {
-    // Check that the controller throws a suitable exception when it gets an invalid command
-    String failedTestComment = "Controller failed to throw an InvalidIdentifierLengthException for command `abc123`";
-    // The next lins is a bit ugly, but it is the easiest way to test exceptions (soz)
-    assertThrows(InvalidIdentifierLengthException.class, ()-> sendCommandToController("abc123"), failedTestComment);
+  void testWinDiagTopLeftX() throws OXOMoveException {
+    OXOPlayer firstMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber());
+    // Make a bunch of moves for the two players
+    sendCommandToController("a1"); // First player
+    sendCommandToController("b1"); // Second player
+    sendCommandToController("a2"); // First player
+    sendCommandToController("a3"); // Second player
+    sendCommandToController("b2"); // First player
+    sendCommandToController("c2"); // Second player
+    sendCommandToController("c1"); // First player
+    sendCommandToController("b3"); // Second player
+    sendCommandToController("c3"); // First player
+
+    String failedTestComment = "testWinDiagTopLeftX was expected to be " + firstMovingPlayer.getPlayingLetter() + " but wasn't";
+    assertEquals(firstMovingPlayer, model.getWinner(), failedTestComment);
   }
+
+
+  @Test
+  void testWinDiagBottomLeftO() throws OXOMoveException {
+    OXOPlayer secondMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber() + 1);
+    // Make a bunch of moves for the two players
+    sendCommandToController("b1");
+    sendCommandToController("c1");
+    sendCommandToController("c2");
+    sendCommandToController("b2");
+    sendCommandToController("c3");
+    sendCommandToController("a3");
+
+    String failedTestComment = "testWinDiagBottomLeftO winner was expected to be " + secondMovingPlayer.getPlayingLetter() + " but wasn't";
+    assertEquals(secondMovingPlayer, model.getWinner(), failedTestComment);
+  }
+
+  @Test
+  void testWinBottomAcrossX() throws OXOMoveException {
+    OXOPlayer firstMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber());
+    // Make a bunch of moves for the two players
+    sendCommandToController("c1");
+    sendCommandToController("b1");
+    sendCommandToController("c2");
+    sendCommandToController("b2");
+    sendCommandToController("c3");
+
+    String failedTestComment = "testWinBottomAcrossX was expected to be " + firstMovingPlayer.getPlayingLetter() + " but wasn't";
+    assertEquals(firstMovingPlayer, model.getWinner(), failedTestComment);
+  }
+
+  @Test
+  void testWinMiddleAcrossO() throws OXOMoveException {
+    OXOPlayer secondMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber() + 1);
+    // Make a bunch of moves for the two players
+    sendCommandToController("a1");
+    sendCommandToController("b1");
+    sendCommandToController("c1");
+    sendCommandToController("b2");
+    sendCommandToController("c2");
+    sendCommandToController("b3");
+
+    String failedTestComment = "testWinMiddleAcrossO was expected to be " + secondMovingPlayer.getPlayingLetter() + " but wasn't";
+    assertEquals(secondMovingPlayer, model.getWinner(), failedTestComment);
+  }
+
+  @Test
+  void testWinTopAcrossX() throws OXOMoveException {
+    OXOPlayer firstMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber());
+    // Make a bunch of moves for the two players
+    sendCommandToController("a1");
+    sendCommandToController("b1");
+    sendCommandToController("a2");
+    sendCommandToController("b2");
+    sendCommandToController("a3");
+
+    String failedTestComment = "testWinTopAcrossX was expected to be " + firstMovingPlayer.getPlayingLetter() + " but wasn't";
+    assertEquals(firstMovingPlayer, model.getWinner(), failedTestComment);
+  }
+
+  @Test
+  void testWinDownLeftX() throws OXOMoveException {
+    OXOPlayer firstMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber());
+    // Make a bunch of moves for the two players
+    sendCommandToController("a1");
+    sendCommandToController("a2");
+    sendCommandToController("b1");
+    sendCommandToController("b2");
+    sendCommandToController("c1");
+
+    String failedTestComment = "testWinDownLeftX was expected to be " + firstMovingPlayer.getPlayingLetter() + " but wasn't";
+    assertEquals(firstMovingPlayer, model.getWinner(), failedTestComment);
+  }
+
+  @Test
+  void testWinDownRightO() throws OXOMoveException {
+    OXOPlayer secondMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber() + 1);
+    // Make a bunch of moves for the two players
+    sendCommandToController("a2");
+    sendCommandToController("a3");
+    sendCommandToController("a1");
+    sendCommandToController("b3");
+    sendCommandToController("b2");
+    sendCommandToController("c3");
+
+    String failedTestComment = "testWinDownRightO was expected to be " + secondMovingPlayer.getPlayingLetter() + " but wasn't";
+    assertEquals(secondMovingPlayer, model.getWinner(), failedTestComment);
+  }
+
+  @Test
+  void testWinMiddleRightO() throws OXOMoveException {
+    OXOPlayer secondMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber() + 1);
+    // Make a bunch of moves for the two players
+    sendCommandToController("a1");
+    sendCommandToController("b2");
+    sendCommandToController("c1");
+    sendCommandToController("b2");
+    sendCommandToController("a2");
+    sendCommandToController("b3");
+    sendCommandToController("c2");
+
+    String failedTestComment = "testWinMiddleRightO was expected to be " + secondMovingPlayer.getPlayingLetter() + " but wasn't";
+    assertEquals(secondMovingPlayer, model.getWinner(), failedTestComment);
+  }
+
+  @Test
+  void testStalemate() throws OXOMoveException {
+    OXOPlayer secondMovingPlayer = model.getPlayerByNumber(model.getCurrentPlayerNumber() + 1);
+    // Make a bunch of moves for the two players
+    sendCommandToController("a1");
+    sendCommandToController("b2");
+    sendCommandToController("a3");
+    sendCommandToController("a2");
+    sendCommandToController("c2");
+    sendCommandToController("b1");
+    sendCommandToController("b3");
+    sendCommandToController("c3");
+    sendCommandToController("c1");
+
+    String failedTestComment = "stalemate test failed";
+    assertEquals(true, model.isGameDrawn(), failedTestComment);
+  }
+
+
+
+
+//  // Example of how to test for the throwing of exceptions
+//  @Test
+//  void testInvalidIdentifierException() throws OXOMoveException {
+//    // Check that the controller throws a suitable exception when it gets an invalid command
+//    String failedTestComment = "Controller failed to throw an InvalidIdentifierLengthException for command `abc123`";
+//    // The next lins is a bit ugly, but it is the easiest way to test exceptions (soz)
+//    assertThrows(InvalidIdentifierLengthException.class, ()-> sendCommandToController("abc123"), failedTestComment);
+//  }
 }

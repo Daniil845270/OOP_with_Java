@@ -16,12 +16,14 @@ public class OXOController implements Serializable {
         if (gameModel.getWinner() == null && (!gameModel.isGameDrawn())) { // this is very bad, but I just want this thing to run at least somehow
             //When updating the game state, you should set the 'current player' to be the player whose turn it is next. This is to ensure that the view shows graphically the player who is about to take a turn.
 
+            System.out.println("sendCommandToController(\"" + command + "\");");
             //set what player is currently the turn
             int playerNumber = gameModel.getCurrentPlayerNumber();
             OXOPlayer currPlayer = gameModel.getPlayerByNumber(playerNumber);
 
             //translate the row letter into number
             //need to figure out what/how to treat the invalid input
+            //this program is going to return
             int rowNum;
             if (command.charAt(0) == 'a' || command.charAt(0) == 'A') {
                 rowNum = 0;
@@ -29,6 +31,18 @@ public class OXOController implements Serializable {
                 rowNum = 1;
             } else if (command.charAt(0) == 'c' || command.charAt(0) == 'C') {
                 rowNum = 2;
+            } else if (command.charAt(0) == 'd' || command.charAt(0) == 'D') {
+                rowNum = 3;
+            } else if (command.charAt(0) == 'e' || command.charAt(0) == 'E') {
+                rowNum = 4;
+            } else if (command.charAt(0) == 'f' || command.charAt(0) == 'F') {
+                rowNum = 5;
+            } else if (command.charAt(0) == 'g' || command.charAt(0) == 'G') {
+                rowNum = 6;
+            } else if (command.charAt(0) == 'h' || command.charAt(0) == 'H') {
+                rowNum = 7;
+            } else if (command.charAt(0) == 'i' || command.charAt(0) == 'I') {
+                rowNum = 8;
             } else {
                 rowNum = -1;
             }
@@ -38,6 +52,7 @@ public class OXOController implements Serializable {
             //this sets the cell owner, given that it is not occupied already
             //have to figure out how to deal with invalid input, but can do it later
             if (gameModel.getCellOwner(rowNum, colNum) == null) {
+//                System.out.println(rowNum + " " + colNum);
                 gameModel.setCellOwner(rowNum, colNum, currPlayer);
 
                 //switch the turn to the next player
@@ -53,7 +68,7 @@ public class OXOController implements Serializable {
 
             //game detection part of the method
             //horizontal checking - check every possibility on the row
-            //the logic is a bit fucked up and the algorhythm is hugely inefficient, but it should work
+            //the logic is a bit fucked up and the algorithm is hugely inefficient, but it should work
             for (int col = 0; col < gameModel.getNumberOfColumns() - 2; col++) {
                 if (gameModel.getCellOwner(rowNum, col) != null &&
                         (gameModel.getCellOwner(rowNum, col) == gameModel.getCellOwner(rowNum, col + 1)) &&
@@ -77,8 +92,8 @@ public class OXOController implements Serializable {
                 lrow--; lcol--;
             }
             for (; ((lrow < gameModel.getNumberOfRows() - 2) && (lcol < gameModel.getNumberOfColumns() - 2)); lrow++, lcol++) {
-                System.out.println(lrow);
-                System.out.println(lcol);
+//                System.out.println(lrow);
+//                System.out.println(lcol);
                 if (gameModel.getCellOwner(lrow, lcol) != null &&
                         (gameModel.getCellOwner(lrow, lcol) == gameModel.getCellOwner(lrow + 1, lcol + 1)) &&
                         (gameModel.getCellOwner(lrow, lcol) == gameModel.getCellOwner(lrow + 2, lcol + 2))) {
@@ -88,13 +103,10 @@ public class OXOController implements Serializable {
             //bottom left diagonal check, test this
             int rrow = rowNum;
             int rcol = colNum;
-            while ((rrow < gameModel.getNumberOfRows() - 2) && (rcol > 0)) {
+            while ((rrow < gameModel.getNumberOfRows() - 1) && (rcol > 0)) { //this was a bug logically
                 rrow++; rcol--;
             }
-            for (;
-                 ((rrow > 1) &&
-                         (rcol < gameModel.getNumberOfColumns() - 2))
-                    ; rrow--, rcol++) {
+            for (; ((rrow > 1) && (rcol < gameModel.getNumberOfColumns() - 2)); rrow--, rcol++) {
                 if (gameModel.getCellOwner(rrow, rcol) != null &&
                         (gameModel.getCellOwner(rrow, rcol) == gameModel.getCellOwner(rrow - 1, rcol + 1)) &&
                         (gameModel.getCellOwner(rrow, rcol) == gameModel.getCellOwner(rrow - 2, rcol + 2))) {
@@ -151,6 +163,7 @@ public class OXOController implements Serializable {
         //reset the winner and the player
         gameModel.setWinner(null);
         gameModel.setCurrentPlayerNumber(0);
+        gameModel.setGameDrawn(false); //if it was true
 
         //optional: print to the console of the reinitialised board
         System.out.println("Board is now reset!");
