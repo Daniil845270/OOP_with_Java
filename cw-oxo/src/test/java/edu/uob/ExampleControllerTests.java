@@ -200,6 +200,10 @@ class ExampleControllerTests {
     assertEquals(true, model.isGameDrawn(), failedTestComment);
   }
 
+  // test exceptions when I write them
+  // test the basic detections  rules with a grid greater than 3X3 (may test the limit of 9x9)
+
+
 
 
 
