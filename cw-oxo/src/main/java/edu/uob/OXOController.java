@@ -72,7 +72,8 @@ public class OXOController implements Serializable {
             throw new OutsideCellRangeException(OXOMoveException.RowOrColumn.ROW, rowNum + 1);
         }
 
-        if ((command.charAt(1) - '0' - 1) < 0 || (command.charAt(1) - '0' - 1) > 9) {
+        System.out.println((command.charAt(1) - '0' - 1));
+        if ((command.charAt(1) - '0' - 1) < 0 || (command.charAt(1) - '0' - 1) > 8) {
             throw new InvalidIdentifierCharacterException(RowOrColumn.COLUMN, (command.charAt(1) ));
         }
 

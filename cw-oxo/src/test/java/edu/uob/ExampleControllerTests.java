@@ -173,7 +173,7 @@ class ExampleControllerTests {
     sendCommandToController("a1");
     sendCommandToController("b2");
     sendCommandToController("c1");
-    sendCommandToController("b2");
+//    sendCommandToController("b2");
     sendCommandToController("a2");
     sendCommandToController("b3");
     sendCommandToController("c2");
@@ -211,5 +211,85 @@ class ExampleControllerTests {
     String failedTestComment = "Controller failed to throw an InvalidIdentifierLengthException for command `abc123`";
     // The next lins is a bit ugly, but it is the easiest way to test exceptions (soz)
     assertThrows(InvalidIdentifierLengthException.class, ()-> sendCommandToController("abc123"), failedTestComment);
+  }
+
+  @Test
+  void testInvalidIdentifierLengthTooShort1() throws OXOMoveException {
+    // Check that the controller throws a suitable exception when it gets an invalid command
+    String failedTestComment = "Controller failed to throw an InvalidIdentifierLengthException for command ``";
+    // The next lines is a bit ugly, but it is the easiest way to test exceptions (soz)
+    assertThrows(InvalidIdentifierLengthException.class, ()-> sendCommandToController(""), failedTestComment);
+  }
+
+  @Test
+  void testInvalidIdentifierLengthTooShort2() throws OXOMoveException {
+    // Check that the controller throws a suitable exception when it gets an invalid command
+    String failedTestComment = "Controller failed to throw an InvalidIdentifierLengthException for command `?`";
+    // The next lines is a bit ugly, but it is the easiest way to test exceptions (soz)
+    assertThrows(InvalidIdentifierLengthException.class, ()-> sendCommandToController("?"), failedTestComment);
+  }
+
+  @Test
+  void testInvalidIdentifierLengthTooShort3() throws OXOMoveException {
+    // Check that the controller throws a suitable exception when it gets an invalid command
+    String failedTestComment = "Controller failed to throw an InvalidIdentifierLengthException for command `???`";
+    // The next lines is a bit ugly, but it is the easiest way to test exceptions (soz)
+    assertThrows(InvalidIdentifierLengthException.class, ()-> sendCommandToController("???"), failedTestComment);
+  }
+
+  @Test
+  void testInvalidIdentifierCharacter() throws OXOMoveException {
+    // Check that the controller throws a suitable exception when it gets an invalid command
+    String failedTestComment = "Controller failed to throw an InvalidIdentifierCharacterException for command `??`";
+    // The next lines is a bit ugly, but it is the easiest way to test exceptions (soz)
+    assertThrows(InvalidIdentifierCharacterException.class, ()-> sendCommandToController("??"), failedTestComment);
+  }
+
+  @Test
+  void testInvalidIdentifierCharacter2() throws OXOMoveException {
+    // Check that the controller throws a suitable exception when it gets an invalid command
+    String failedTestComment = "Controller failed to throw an InvalidIdentifierCharacterException for command `?1`";
+    // The next lines is a bit ugly, but it is the easiest way to test exceptions (soz)
+    assertThrows(InvalidIdentifierCharacterException.class, ()-> sendCommandToController("?1"), failedTestComment);
+  }
+
+  @Test
+  void testInvalidIdentifierCharacter3() throws OXOMoveException {
+    // Check that the controller throws a suitable exception when it gets an invalid command
+    String failedTestComment = "Controller failed to throw an InvalidIdentifierCharacterException for command `a?`";
+    // The next lines is a bit ugly, but it is the easiest way to test exceptions (soz)
+    assertThrows(InvalidIdentifierCharacterException.class, ()-> sendCommandToController("a?"), failedTestComment);
+  }
+
+  @Test
+  void testInvalidIdentifierCharacter4() throws OXOMoveException {
+    // Check that the controller throws a suitable exception when it gets an invalid command
+    String failedTestComment = "Controller failed to throw an InvalidIdentifierCharacterException for command `a/`";
+    // The next lines is a bit ugly, but it is the easiest way to test exceptions (soz)
+    assertThrows(InvalidIdentifierCharacterException.class, ()-> sendCommandToController("a/"), failedTestComment);
+  }
+
+  @Test
+  void testInvalidIdentifierCharacter5() throws OXOMoveException {
+    // Check that the controller throws a suitable exception when it gets an invalid command
+    String failedTestComment = "Controller failed to throw an InvalidIdentifierCharacterException for command `a:`";
+    // The next lines is a bit ugly, but it is the easiest way to test exceptions (soz)
+    assertThrows(InvalidIdentifierCharacterException.class, ()-> sendCommandToController("a:"), failedTestComment);
+  }
+
+  @Test
+  void testInvalidIdentifierCharacter6() throws OXOMoveException {
+    // Check that the controller throws a suitable exception when it gets an invalid command
+    String failedTestComment = "Controller failed to throw an InvalidIdentifierCharacterException for command ``3`";
+    // The next lines is a bit ugly, but it is the easiest way to test exceptions (soz)
+    assertThrows(InvalidIdentifierCharacterException.class, ()-> sendCommandToController("`3"), failedTestComment);
+  }
+
+  @Test
+  void testInvalidIdentifierCharacter7() throws OXOMoveException {
+    // Check that the controller throws a suitable exception when it gets an invalid command
+    String failedTestComment = "Controller failed to throw an InvalidIdentifierCharacterException for command `{3`";
+    // The next lines is a bit ugly, but it is the easiest way to test exceptions (soz)
+    assertThrows(InvalidIdentifierCharacterException.class, ()-> sendCommandToController("{3"), failedTestComment);
   }
 }
