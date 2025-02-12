@@ -204,15 +204,12 @@ class ExampleControllerTests {
   // test the basic detections  rules with a grid greater than 3X3 (may test the limit of 9x9)
 
 
-
-
-
-//  // Example of how to test for the throwing of exceptions
-//  @Test
-//  void testInvalidIdentifierException() throws OXOMoveException {
-//    // Check that the controller throws a suitable exception when it gets an invalid command
-//    String failedTestComment = "Controller failed to throw an InvalidIdentifierLengthException for command `abc123`";
-//    // The next lins is a bit ugly, but it is the easiest way to test exceptions (soz)
-//    assertThrows(InvalidIdentifierLengthException.class, ()-> sendCommandToController("abc123"), failedTestComment);
-//  }
+  // Example of how to test for the throwing of exceptions
+  @Test
+  void testInvalidIdentifierException() throws OXOMoveException {
+    // Check that the controller throws a suitable exception when it gets an invalid command
+    String failedTestComment = "Controller failed to throw an InvalidIdentifierLengthException for command `abc123`";
+    // The next lins is a bit ugly, but it is the easiest way to test exceptions (soz)
+    assertThrows(InvalidIdentifierLengthException.class, ()-> sendCommandToController("abc123"), failedTestComment);
+  }
 }
