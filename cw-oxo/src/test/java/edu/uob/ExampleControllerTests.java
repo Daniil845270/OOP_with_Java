@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.time.Duration;
 
+// implemented the horizontal and vertical win checking with variable win treshold -> check the actual variable win threshold with edge cases
+
 class ExampleControllerTests {
   private OXOModel model;
   private OXOController controller;

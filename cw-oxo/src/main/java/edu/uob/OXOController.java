@@ -2,6 +2,8 @@ package edu.uob;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
+
 import edu.uob.OXOMoveException.*;
 
 public class OXOController implements Serializable {
@@ -32,6 +34,7 @@ public class OXOController implements Serializable {
             int colNum = command.charAt(1) - '0' - 1;
 
             setCellOwner(rowNum, colNum, playerNumber, currPlayer);
+            gameModel.setGameOngoing(true);
             checkHorizVertWin(rowNum, colNum);
             checkDiagWin(rowNum, colNum);
             checkDraw();
@@ -103,44 +106,154 @@ public class OXOController implements Serializable {
         }
     }
 
+//    public void checkHorizVertWin(int rowNum, int colNum) {
+//        //game detection part of the method
+//        //horizontal checking - check every possibility on the row
+//        //the logic is a bit fucked up and the algorithm is hugely inefficient, but it should work
+//        for (int col = 0; col < gameModel.getNumberOfColumns() - 2; col++) {
+//            if (gameModel.getCellOwner(rowNum, col) != null &&
+//                    (gameModel.getCellOwner(rowNum, col) == gameModel.getCellOwner(rowNum, col + 1)) &&
+//                    (gameModel.getCellOwner(rowNum, col) == gameModel.getCellOwner(rowNum, col + 2))) {
+//                gameModel.setWinner(gameModel.getCellOwner(rowNum, colNum));
+//            }
+//        }
+//        //vertical checking
+//        for (int row = 0; row < gameModel.getNumberOfRows() - 2; row++) {
+//            if (gameModel.getCellOwner(row, colNum) != null &&
+//                    (gameModel.getCellOwner(row, colNum) == gameModel.getCellOwner(row + 1, colNum)) &&
+//                    (gameModel.getCellOwner(row, colNum) == gameModel.getCellOwner(row + 2, colNum))) {
+//                gameModel.setWinner(gameModel.getCellOwner(row, colNum));
+//            }
+//        }
+//    }
+
+    //find a way to shorten this fugly function
     public void checkHorizVertWin(int rowNum, int colNum) {
         //game detection part of the method
         //horizontal checking - check every possibility on the row
         //the logic is a bit fucked up and the algorithm is hugely inefficient, but it should work
-        for (int col = 0; col < gameModel.getNumberOfColumns() - 2; col++) {
-            if (gameModel.getCellOwner(rowNum, col) != null &&
-                    (gameModel.getCellOwner(rowNum, col) == gameModel.getCellOwner(rowNum, col + 1)) &&
-                    (gameModel.getCellOwner(rowNum, col) == gameModel.getCellOwner(rowNum, col + 2))) {
-                gameModel.setWinner(gameModel.getCellOwner(rowNum, colNum));
+        OXOPlayer winCandidate = null;
+        int winCounter = 0;
+
+        for (int col = 0; col < gameModel.getNumberOfColumns(); col++) {
+            if (gameModel.getCellOwner(rowNum, col) != null && winCandidate == null) {
+                winCandidate = gameModel.getCellOwner(rowNum, col);
+                winCounter = 1;
+            }
+            else if (gameModel.getCellOwner(rowNum, col) != null) {
+                if (gameModel.getCellOwner(rowNum, col) == winCandidate) {
+                    winCounter++;
+                    if (winCounter == gameModel.getWinThreshold()) {
+                        gameModel.setWinner(winCandidate);
+                    }
+                }
+                else if (gameModel.getCellOwner(rowNum, col) != winCandidate && gameModel.getCellOwner(rowNum, col) != null) {
+                    winCandidate = gameModel.getCellOwner(rowNum, col);
+                    winCounter = 1;
+                }
+                else {
+                    winCandidate = null;
+                    winCounter = 0;
+                }
             }
         }
-        //vertical checking
-        for (int row = 0; row < gameModel.getNumberOfRows() - 2; row++) {
-            if (gameModel.getCellOwner(row, colNum) != null &&
-                    (gameModel.getCellOwner(row, colNum) == gameModel.getCellOwner(row + 1, colNum)) &&
-                    (gameModel.getCellOwner(row, colNum) == gameModel.getCellOwner(row + 2, colNum))) {
-                gameModel.setWinner(gameModel.getCellOwner(row, colNum));
+
+        winCandidate = null;
+        winCounter = 0;
+
+        for (int row = 0; row < gameModel.getNumberOfRows(); row++) {
+            if (gameModel.getCellOwner(row, colNum) != null && winCandidate == null) {
+                winCandidate = gameModel.getCellOwner(row, colNum);
+                winCounter = 1;
+            }
+            else if (gameModel.getCellOwner(row, colNum) != null) {
+                if (gameModel.getCellOwner(row, colNum) == winCandidate) {
+                    winCounter++;
+                    if (winCounter == gameModel.getWinThreshold()) {
+                        gameModel.setWinner(winCandidate);
+                    }
+                }
+                else if (gameModel.getCellOwner(row, colNum) != winCandidate && gameModel.getCellOwner(row, colNum) != null) {
+                    winCandidate = gameModel.getCellOwner(row, colNum);
+                    winCounter = 1;
+                }
+                else {
+                    winCandidate = null;
+                    winCounter = 0;
+                }
             }
         }
     }
 
+//    public void checkDiagWin(int rowNum, int colNum) {
+//        //diagonal checking
+//        //top left diagonal check
+//        int lrow = rowNum;
+//        int lcol = colNum;
+//        while ((lrow > 0) && (lcol > 0)) {
+//            lrow--; lcol--;
+//        }
+//        for (; ((lrow < gameModel.getNumberOfRows() - 2) && (lcol < gameModel.getNumberOfColumns() - 2)); lrow++, lcol++) {
+////                System.out.println(lrow);
+////                System.out.println(lcol);
+//            if (gameModel.getCellOwner(lrow, lcol) != null &&
+//                    (gameModel.getCellOwner(lrow, lcol) == gameModel.getCellOwner(lrow + 1, lcol + 1)) &&
+//                    (gameModel.getCellOwner(lrow, lcol) == gameModel.getCellOwner(lrow + 2, lcol + 2))) {
+//                gameModel.setWinner(gameModel.getCellOwner(lrow, lcol));
+//            }
+//        }
+//        //bottom left diagonal check, test this
+//        int rrow = rowNum;
+//        int rcol = colNum;
+//        while ((rrow < gameModel.getNumberOfRows() - 1) && (rcol > 0)) { //this was a bug logically
+//            rrow++; rcol--;
+//        }
+//        for (; ((rrow > 1) && (rcol < gameModel.getNumberOfColumns() - 2)); rrow--, rcol++) {
+//            if (gameModel.getCellOwner(rrow, rcol) != null &&
+//                    (gameModel.getCellOwner(rrow, rcol) == gameModel.getCellOwner(rrow - 1, rcol + 1)) &&
+//                    (gameModel.getCellOwner(rrow, rcol) == gameModel.getCellOwner(rrow - 2, rcol + 2))) {
+//                gameModel.setWinner(gameModel.getCellOwner(rrow, rcol));
+//            }
+//        }
+//    }
+
     public void checkDiagWin(int rowNum, int colNum) {
         //diagonal checking
         //top left diagonal check
+        OXOPlayer winCandidate = null;
+        int winCounter = 0;
+
         int lrow = rowNum;
         int lcol = colNum;
-        while ((lrow > 0) && (lcol > 0)) {
-            lrow--; lcol--;
-        }
-        for (; ((lrow < gameModel.getNumberOfRows() - 2) && (lcol < gameModel.getNumberOfColumns() - 2)); lrow++, lcol++) {
+        while ((lrow > 0) && (lcol > 0)) { lrow--; lcol--; }
+        for (; ((lrow < gameModel.getNumberOfRows()) && (lcol < gameModel.getNumberOfColumns())); lrow++, lcol++) {
 //                System.out.println(lrow);
 //                System.out.println(lcol);
-            if (gameModel.getCellOwner(lrow, lcol) != null &&
-                    (gameModel.getCellOwner(lrow, lcol) == gameModel.getCellOwner(lrow + 1, lcol + 1)) &&
-                    (gameModel.getCellOwner(lrow, lcol) == gameModel.getCellOwner(lrow + 2, lcol + 2))) {
-                gameModel.setWinner(gameModel.getCellOwner(lrow, lcol));
+            if (gameModel.getCellOwner(lrow, lcol) != null && winCandidate == null) {
+                winCandidate = gameModel.getCellOwner(lrow, lcol);
+                winCounter = 1;
+            }
+            else if (gameModel.getCellOwner(lrow, lcol) != null) {
+                if (gameModel.getCellOwner(lrow, lcol) == winCandidate) {
+                    winCounter++;
+                    if (winCounter == gameModel.getWinThreshold()) {
+                        gameModel.setWinner(winCandidate);
+                    }
+                }
+                else if (gameModel.getCellOwner(lrow, lcol) != winCandidate && gameModel.getCellOwner(lrow, lcol) != null) {
+                    winCandidate = gameModel.getCellOwner(lrow, lcol);
+                    winCounter = 1;
+                }
+                else {
+                    winCandidate = null;
+                    winCounter = 0;
+                }
             }
         }
+
+        winCandidate = null;
+        winCounter = 0;
+
         //bottom left diagonal check, test this
         int rrow = rowNum;
         int rcol = colNum;
@@ -190,8 +303,25 @@ public class OXOController implements Serializable {
     public void removeColumn() {
         gameModel.removeColumn();
     }
-    public void increaseWinThreshold() {}
-    public void decreaseWinThreshold() {}
+    public void increaseWinThreshold() {
+        int currWinThreshold = gameModel.getWinThreshold();
+        if (currWinThreshold < (gameModel.getNumberOfColumns())
+                && currWinThreshold < (gameModel.getNumberOfRows())
+                && gameModel.getWinner() == null) {
+            gameModel.setWinThreshold(currWinThreshold + 1);
+            System.out.println("Win Threshold Increased");
+        }
+        System.out.println("Win threshold: " + gameModel.getWinThreshold());
+    }
+    public void decreaseWinThreshold() {
+        int currWinThreshold = gameModel.getWinThreshold();
+        if (gameModel.getWinThreshold() > 3 && !gameModel.isGameOngoing()) {
+            gameModel.setWinThreshold(currWinThreshold - 1);
+            System.out.println("Win Threshold Decreased");
+        }
+        System.out.println("Win threshold: " + gameModel.getWinThreshold());
+    }
+
     public void reset() {
         //set the player to the first player
         gameModel.setCurrentPlayerNumber(0);
@@ -208,6 +338,7 @@ public class OXOController implements Serializable {
         gameModel.setWinner(null);
         gameModel.setCurrentPlayerNumber(0);
         gameModel.setGameDrawn(false); //if it was true
+        gameModel.setGameOngoing(false);
 
         //optional: print to the console of the reinitialised board
         System.out.println("Board is now reset!");

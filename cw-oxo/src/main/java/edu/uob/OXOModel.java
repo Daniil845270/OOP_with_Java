@@ -13,6 +13,8 @@ public class OXOModel implements Serializable {
     private OXOPlayer winner;
     private boolean gameDrawn;
     private int winThreshold;
+    private boolean isOngoing;
+    private OXOPlayer currWiningCandidate;
 
     public OXOModel(int numberOfRows, int numberOfColumns, int winThresh) {
         winThreshold = winThresh;
@@ -26,6 +28,8 @@ public class OXOModel implements Serializable {
             cells.add(rowList);
         }
         players = new OXOPlayer[2];
+        isOngoing = false; // find out if you need to set it to false or it is not needed
+        currWiningCandidate = null;
     }
 
     public int getNumberOfPlayers() {
@@ -139,5 +143,21 @@ public class OXOModel implements Serializable {
             System.out.println("Too few columns");
         }
 
+    }
+
+    public boolean isGameOngoing() {
+        return isOngoing;
+    }
+
+    public void setGameOngoing(boolean ongoingFlag) {
+        isOngoing = ongoingFlag;
+    }
+
+    public OXOPlayer getWinCandidate() {
+        return currWiningCandidate;
+    }
+
+    public void setWinCandidate(OXOPlayer winner) {
+        currWiningCandidate = winner;
     }
 }
