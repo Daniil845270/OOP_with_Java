@@ -15,6 +15,7 @@ public class OXOModel implements Serializable {
     private int winThreshold;
     private boolean isOngoing;
     private OXOPlayer currWiningCandidate;
+    private int currWinCnt;
 
     public OXOModel(int numberOfRows, int numberOfColumns, int winThresh) {
         winThreshold = winThresh;
@@ -30,6 +31,7 @@ public class OXOModel implements Serializable {
         players = new OXOPlayer[2];
         isOngoing = false; // find out if you need to set it to false or it is not needed
         currWiningCandidate = null;
+        currWinCnt = 0;
     }
 
     public int getNumberOfPlayers() {
@@ -159,5 +161,13 @@ public class OXOModel implements Serializable {
 
     public void setWinCandidate(OXOPlayer winner) {
         currWiningCandidate = winner;
+    }
+
+    public int getWinCounter() {
+        return currWinCnt;
+    }
+
+    public void setWinCounter(int cnt) {
+        currWinCnt = cnt;
     }
 }

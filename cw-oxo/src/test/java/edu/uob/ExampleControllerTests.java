@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Duration;
 
 // implemented the horizontal and vertical win checking with variable win treshold -> check the actual variable win threshold with edge cases
+// test the case where you have 2 in a row, then space/other players mark, then 3 in a row (depending on the win threshold)
 
 class ExampleControllerTests {
   private OXOModel model;
