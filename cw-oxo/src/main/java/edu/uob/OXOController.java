@@ -168,8 +168,6 @@ public class OXOController implements Serializable {
 
 
     public void checkDraw() {
-        //implement draw check, need to test this
-        //i guess it works, but it wasn't explicit
         boolean drawn = true;
         for (int i = 0; i < gameModel.getNumberOfRows(); i++) {
             for (int j = 0; j < gameModel.getNumberOfColumns(); j++) {
