@@ -1,0 +1,8 @@
+- Both Database names and Table names should be case-insensitive (since some file systems have problems differentiating between upper and lower case filenames)
+use tolower when the need arises
+
+
+what to do:
+1) find the people.tab file
+2) read from the file (may be line by line)
+3) System.out.printline each read line

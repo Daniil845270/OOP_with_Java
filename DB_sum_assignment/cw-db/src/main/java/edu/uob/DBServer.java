@@ -1,5 +1,7 @@
 package edu.uob;
 
+//import java.io.*;
+import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -16,6 +18,7 @@ public class DBServer {
 
     private static final char END_OF_TRANSMISSION = 4;
     private String storageFolderPath;
+    private DBCommandHandler cmdHandler;
 
     public static void main(String args[]) throws IOException {
         DBServer server = new DBServer();
@@ -33,6 +36,7 @@ public class DBServer {
         } catch(IOException ioe) {
             System.out.println("Can't seem to create database storage folder " + storageFolderPath);
         }
+        cmdHandler = new DBCommandHandler();
     }
 
     /**
@@ -41,8 +45,15 @@ public class DBServer {
     *
     * <p>This method handles all incoming DB commands and carries out the required actions.
     */
-    public String handleCommand(String command) {
+
+
+    public String handleCommand(String command) throws IOException {
         // TODO implement your server logic here
+//        readFileAndPrintToConsole();
+        cmdHandler.selectADatabase("secondTestDBfolder");
+        cmdHandler.selectATable("theOtherFile");
+        System.out.println(cmdHandler.getSelectedTable() + " executed");
+        cmdHandler.printSelectedTable();
         return "";
     }
 
