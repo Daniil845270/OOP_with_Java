@@ -5,25 +5,32 @@ import java.io.*;
 import java.util.Arrays;
 
 
+// absolutely need to write the try catch statements when trying to find and open the files
+
 public class DBCommandHandler {
     private String storageFolderPath; //same thing as in the server class
     private File currDBFolder;
     private File currDBTable;
+    private DBDataBase currDabase;
 
     public DBCommandHandler() {
         storageFolderPath = Paths.get("databases").toAbsolutePath().toString();
     }
 
-    public void selectADatabase(String databaseName) throws IOException { //what if the database is not there or a command is malformed?
-        boolean found = false; //find out what to do with it later
+    public void selectADatabase(String databaseName) throws IOException { //what if the database is not there or a command is malformed?//find out what to do with it later
+        currDBFolder = null;
         File[] dbList = new File(storageFolderPath).listFiles();
         for (File dataBase : dbList) {
-            if (dataBase.getName().toLowerCase().equals(databaseName.toLowerCase())) {
+            if (dataBase.getName().equals(databaseName.toLowerCase())) {
                 currDBFolder = dataBase;
-                found = true;
                 System.out.println("Found database " + currDBFolder.getName());
             }
         }
+//        if (currDBFolder == null){
+//            throw new FileNotFoundException();
+//        }
+
+        currDabase = new DBDataBase(currDBFolder);
     }
 
     public String getSelectedDatabase() {
@@ -54,7 +61,9 @@ public class DBCommandHandler {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(currDBTable));
             long lineCnt = lineCntReader.lines().count();
             for (int lineNumber = 0; lineNumber < lineCnt; lineNumber++) {
-                System.out.println(bufferedReader.readLine());
+                String[] line = bufferedReader.readLine().split("\\t");
+                System.out.println(Arrays.toString(line));
+//                System.out.println(bufferedReader.readLine());
             }
             lineCntReader.close();
             bufferedReader.close();

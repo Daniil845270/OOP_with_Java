@@ -50,10 +50,11 @@ public class DBServer {
     public String handleCommand(String command) throws IOException {
         // TODO implement your server logic here
 //        readFileAndPrintToConsole();
+
         cmdHandler.selectADatabase("secondTestDBfolder");
-        cmdHandler.selectATable("theOtherFile");
-        System.out.println(cmdHandler.getSelectedTable() + " executed");
-        cmdHandler.printSelectedTable();
+//        cmdHandler.selectATable("theOtherFile");
+//        System.out.println(cmdHandler.getSelectedTable() + " executed");
+//        cmdHandler.printSelectedTable();
         return "";
     }
 
