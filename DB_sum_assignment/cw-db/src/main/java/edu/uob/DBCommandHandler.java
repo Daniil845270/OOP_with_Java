@@ -5,16 +5,17 @@ import java.io.*;
 import java.util.Arrays;
 
 
-// absolutely need to write the try catch statements when trying to find and open the files
+// absolutely need to write the try catch statements when trying to find and open the files, this code is fragile
 
 public class DBCommandHandler {
     private String storageFolderPath; //same thing as in the server class
     private File currDBFolder;
     private File currDBTable;
-    private DBDataBase currDabase;
+    private DBDataBase currDatabase;
 
     public DBCommandHandler() {
         storageFolderPath = Paths.get("databases").toAbsolutePath().toString();
+        currDBFolder = null;
     }
 
     public void selectADatabase(String databaseName) throws IOException { //what if the database is not there or a command is malformed?//find out what to do with it later
@@ -26,91 +27,81 @@ public class DBCommandHandler {
                 System.out.println("Found database " + currDBFolder.getName());
             }
         }
-//        if (currDBFolder == null){
-//            throw new FileNotFoundException();
-//        }
-
-        currDabase = new DBDataBase(currDBFolder);
+        currDatabase = new DBDataBase(currDBFolder);
     }
 
-    public String getSelectedDatabase() {
-        return currDBFolder.getName();
-    }
-
-    // this is a very bad piece of code, need to make it more robust
-    public void selectATable(String tableName) throws IOException {
-        for (File table : currDBFolder.listFiles()) { //Dereference of 'currDBFolder.listFiles()' may produce 'NullPointerException' -> need to throw an exception for that
-            String candidateTable = table.getName().toLowerCase();
-            if (candidateTable.indexOf(".") > 0) {
-                candidateTable = candidateTable.substring(0, candidateTable.indexOf("."));
+    // this method needs to check whether the database that I am creating doesn't already exist
+    public void createDatabase(String databaseName) throws IOException {
+        String newDBName = storageFolderPath + File.separator + databaseName;
+        File newDB = new File(newDBName);
+        if (newDB.exists()) {
+            System.out.println("Database already exists");
+        } else {
+            if (!newDB.mkdir()){
+                System.out.println("Unable to create database");
+                throw new IOException("Unable to create database");
             }
-            if (candidateTable.equals(tableName.toLowerCase())) {
-                currDBTable = table;
-//                System.out.println("Found table " + currDBTable.getName() + " " + candidateTable);
-            }
+            System.out.println("Database created");
         }
     }
 
-    public String getSelectedTable() {
-        return currDBTable.getName();
-    }
-
-    public void printSelectedTable() throws IOException {
-        if (currDBTable.exists()){
-            BufferedReader lineCntReader = new BufferedReader(new FileReader(currDBTable));
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(currDBTable));
-            long lineCnt = lineCntReader.lines().count();
-            for (int lineNumber = 0; lineNumber < lineCnt; lineNumber++) {
-                String[] line = bufferedReader.readLine().split("\\t");
-                System.out.println(Arrays.toString(line));
-//                System.out.println(bufferedReader.readLine());
-            }
-            lineCntReader.close();
-            bufferedReader.close();
+    public void useDatabase(String databaseName) throws IOException {
+        // first of all, need to check if the database that I want to use actually exists
+        String database = storageFolderPath + File.separator + databaseName;
+        File dbToUse = new File(database);
+        if (!dbToUse.exists()) {
+//            System.out.println("Database file not found: " + database);
+            throw new IOException("Database file not found: " + database);
         }
+        //ok, so the database does exist, now I need to create the in-memory representation of that database
+        currDatabase = new DBDataBase(dbToUse);
+        System.out.println("Database selected");
+        currDatabase.printDatabase();
     }
 }
 
 
+
+
+
+
+
+
+
 //
-//
-//    // should have a constructor that takes in the command from handleCommand()
-//    // e.g.
-//    private String cmdStr;
-//    private ArrayList<String> cmdList = new ArrayList<>(); //figure out later what to do with it
-//    private DBMap dbMap;
-//    private String storageFolderPath;
-//
-//    public DBCommandHandler(String command) {
-//        // initialse a var
-//        cmdStr = command;
-//        // call a method from the parser class that would initialise a parsed command
-//
-//        dbMap = new DBMap();
-//        //check that this is right
-//        storageFolderPath = Paths.get("databases").toAbsolutePath().toString();
+//    public String getSelectedDatabase() {
+//        return currDBFolder.getName();
 //    }
 //
-//    public void readSelectedDatabase(String dbName) {
-//        //1) takes in a name of the database,
-//        //2 searches it through the files of the databses directory
-//        // 3)finds the database that is being requested
-//        // 4) populates the dbMap variable with the names of the tables:objects of the tables
-//        File[] dbList = new File(storageFolderPath).listFiles();
-//        if (dbList != null) {
-//            for (File f : dbList) {
-//                if (f.getName().equals(dbName)) {
-//                    readFoundDatabase(f);
-//                }
+//    // this is a very bad piece of code, need to make it more robust
+//    public void selectATable(String tableName) throws IOException {
+//        for (File table : currDBFolder.listFiles()) { //Dereference of 'currDBFolder.listFiles()' may produce 'NullPointerException' -> need to throw an exception for that
+//            String candidateTable = table.getName().toLowerCase();
+//            if (candidateTable.indexOf(".") > 0) {
+//                candidateTable = candidateTable.substring(0, candidateTable.indexOf("."));
+//            }
+//            if (candidateTable.equals(tableName.toLowerCase())) {
+//                currDBTable = table;
+////                System.out.println("Found table " + currDBTable.getName() + " " + candidateTable);
 //            }
 //        }
 //    }
 //
-//    public void readFoundDatabase(File dbFile) {
-//        for (File tableFile : dbFile.listFiles()) {
-//            dbMap.addTable(tableFile);
-//        }
+//    public String getSelectedTable() {
+//        return currDBTable.getName();
 //    }
 //
-//    //I should probably wh
-//}
+//    public void printSelectedTable() throws IOException {
+//        if (currDBTable.exists()){
+//            BufferedReader lineCntReader = new BufferedReader(new FileReader(currDBTable));
+//            BufferedReader bufferedReader = new BufferedReader(new FileReader(currDBTable));
+//            long lineCnt = lineCntReader.lines().count();
+//            for (int lineNumber = 0; lineNumber < lineCnt; lineNumber++) {
+//                String[] line = bufferedReader.readLine().split("\\t");
+//                System.out.println(Arrays.toString(line));
+////                System.out.println(bufferedReader.readLine());
+//            }
+//            lineCntReader.close();
+//            bufferedReader.close();
+//        }
+//    }

@@ -1,12 +1,12 @@
 package edu.uob;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 import java.time.Duration;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ExampleDBTests {
 
@@ -36,7 +36,14 @@ public class ExampleDBTests {
     @Test
     public void testBasicCreateAndQuery() {
         String randomName = generateRandomName();
-        sendCommandToServer("CREATE DATABASE " + randomName + ";");
+//        sendCommandToServer("CREATE DATABASE " + randomName + ";");
+//        assertThrows(IOException.class, () -> {sendCommandToServer("USE " + randomName + ";");});
+//        sendCommandToServer("USE " + randomName + ";");
+//        sendCommandToServer("CREATE DATABASE " + randomName + ";");
+
+//        sendCommandToServer("USE " + randomName + ";");
+        sendCommandToServer("USE secondtestdbfolder;");
+
     }
 //
 //    // A basic test that creates a database, creates a table, inserts some test data, then queries it.

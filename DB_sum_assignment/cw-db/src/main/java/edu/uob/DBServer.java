@@ -19,6 +19,7 @@ public class DBServer {
     private static final char END_OF_TRANSMISSION = 4;
     private String storageFolderPath;
     private DBCommandHandler cmdHandler;
+    private DBParser dbParser;
 
     public static void main(String args[]) throws IOException {
         DBServer server = new DBServer();
@@ -47,14 +48,19 @@ public class DBServer {
     */
 
 
-    public String handleCommand(String command) throws IOException {
+    public String handleCommand(String command){
         // TODO implement your server logic here
-//        readFileAndPrintToConsole();
 
-        cmdHandler.selectADatabase("secondTestDBfolder");
-//        cmdHandler.selectATable("theOtherFile");
-//        System.out.println(cmdHandler.getSelectedTable() + " executed");
-//        cmdHandler.printSelectedTable();
+        try {
+            dbParser = new DBParser(command);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+
+        }
+//        dbParser.setup();
+
+//        cmdHandler.selectADatabase("secondTestDBfolder");
+
         return "";
     }
 
