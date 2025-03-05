@@ -9,68 +9,50 @@ import java.util.Arrays;
 
 public class DBCommandHandler {
     private String storageFolderPath; //same thing as in the server class
-    private File currDBFolder;
-    private File currDBTable;
-    private DBDataBase currDatabase;
+
+    private String currDBName;
+    private DBDataBase currInMemDatabase;
 
     public DBCommandHandler() {
         storageFolderPath = Paths.get("databases").toAbsolutePath().toString();
-        currDBFolder = null;
+//        currDBFolder = null;
+        currDBName = null;
     }
 
-    public void selectADatabase(String databaseName) throws IOException { //what if the database is not there or a command is malformed?//find out what to do with it later
-        currDBFolder = null;
-        File[] dbList = new File(storageFolderPath).listFiles();
-        for (File dataBase : dbList) {
-            if (dataBase.getName().equals(databaseName.toLowerCase())) {
-                currDBFolder = dataBase;
-                System.out.println("Found database " + currDBFolder.getName());
+    public void createDatabase(String newDBName) throws IOException {
+
+        String newDBPath = storageFolderPath + File.separator + newDBName;
+        File newDB = new File(newDBPath);
+        if (newDB.exists()) {
+            throw new IOException("Database already exists");
+        } else {
+            if (!newDB.mkdir()){ // this line create a directory. But if it doesn't for some reason, then it throws an error
+                System.out.println("!!!!!!!!!!!!!!!!Unable to create database!!!!!!!!!!!!!!");
+                throw new IOException("!!!!!!!!!!!!!!!!Unable to create database!!!!!!!!!!!!!!"); // no idea how to test this, but i don't think I need
             }
         }
-        currDatabase = new DBDataBase(currDBFolder);
     }
 
-    // this method needs to check whether the database that I am creating doesn't already exist
-    public void createExecution(String databaseName) throws IOException {
-        String newDBorFolderPath;
-        if (currDBFolder == null) {
-            newDBorFolderPath = storageFolderPath + File.separator + databaseName;
+    public void createTable(ArrayList<String> newTableName) throws IOException {
+        System.out.println("Was here");
+        System.out.println(currDBName);
+        if (currDBName == null) throw new IOException("Database not selected");
+        String DBorFolderPath = storageFolderPath + File.separator + currDBName;
+        String newTablePath = DBorFolderPath + File.separator + newTableName.get(0) + ".tab";
+        File newTable = new File(newTablePath);
+        System.out.println("Was here");
+        if (newTable.exists()) {
+            System.out.println("Was here");
+            throw new IOException("Table already exists"); //this one is not tested, but I am pretty sure there are not bugs
         } else {
-            newDBorFolderPath = storageFolderPath + File.separator + currDBFolder + File.separator + databaseName;
-        }
-        File newDBorFolder = new File(newDBorFolderPath);
-        if (newDBorFolder.exists()) {
-            throw new IOException("Database or table already exists");
-        }
-//        if (newDB.exists()) {
-//            System.out.println("Database already exists");
-//        } else {
-//            if (!newDB.mkdir()){ // this line create a directory. But if it doesn't for some reason, then it throws an error
-//                System.out.println("Unable to create database");
-//                throw new IOException("Unable to create database");
+            System.out.println(newTable.createNewFile());
+            System.out.println("Was here");
+//            if (!newTable.createNewFile()){
+//                System.out.println("!!!!!!!!!!!!!!!!Unable to create database!!!!!!!!!!!!!!");
+//                throw new IOException("!!!!!!!!!!!!!!!!Unable to create database!!!!!!!!!!!!!!"); // no idea how to test this, but i don't think I need
 //            }
-//            System.out.println("Database created");
-//        }
+        }
     }
-
-//    // this method needs to check whether the database that I am creating doesn't already exist
-//    public void createDatabase(String databaseName) throws IOException {
-//        String newDBName = storageFolderPath + File.separator + databaseName;
-//        File newDB = new File(newDBName);
-//        if (newDB.exists()) {
-//            System.out.println("Database already exists");
-//        } else {
-//            if (!newDB.mkdir()){ // this line create a directory. But if it doesn't for some reason, then it throws an error
-//                System.out.println("Unable to create database");
-//                throw new IOException("Unable to create database");
-//            }
-//            System.out.println("Database created");
-//        }
-//    }
-
-//    public void createTable(String tableName) throws IOException {
-//
-//    }
 
     public void useDatabase(String databaseName) throws IOException {
         // first of all, need to check if the database that I want to use actually exists
@@ -78,57 +60,13 @@ public class DBCommandHandler {
         File dbToUse = new File(database);
         if (!dbToUse.exists()) {
 //            System.out.println("Database file not found: " + database);
-            throw new IOException("Database file not found: " + database);
+            throw new IOException("Database file not found");
         }
         //ok, so the database does exist, now I need to create the in-memory representation of that database
-        currDatabase = new DBDataBase(dbToUse);
-        System.out.println("Database selected");
-//        currDatabase.printDatabase();
+
+        currInMemDatabase = new DBDataBase(dbToUse);
+        currDBName = databaseName;
+        System.out.println("Database selected: " + currInMemDatabase);
+//        currInMemDatabase.printDatabase();
     }
 }
-
-
-
-
-
-
-
-
-
-//
-//    public String getSelectedDatabase() {
-//        return currDBFolder.getName();
-//    }
-//
-//    // this is a very bad piece of code, need to make it more robust
-//    public void selectATable(String tableName) throws IOException {
-//        for (File table : currDBFolder.listFiles()) { //Dereference of 'currDBFolder.listFiles()' may produce 'NullPointerException' -> need to throw an exception for that
-//            String candidateTable = table.getName().toLowerCase();
-//            if (candidateTable.indexOf(".") > 0) {
-//                candidateTable = candidateTable.substring(0, candidateTable.indexOf("."));
-//            }
-//            if (candidateTable.equals(tableName.toLowerCase())) {
-//                currDBTable = table;
-////                System.out.println("Found table " + currDBTable.getName() + " " + candidateTable);
-//            }
-//        }
-//    }
-//
-//    public String getSelectedTable() {
-//        return currDBTable.getName();
-//    }
-//
-//    public void printSelectedTable() throws IOException {
-//        if (currDBTable.exists()){
-//            BufferedReader lineCntReader = new BufferedReader(new FileReader(currDBTable));
-//            BufferedReader bufferedReader = new BufferedReader(new FileReader(currDBTable));
-//            long lineCnt = lineCntReader.lines().count();
-//            for (int lineNumber = 0; lineNumber < lineCnt; lineNumber++) {
-//                String[] line = bufferedReader.readLine().split("\\t");
-//                System.out.println(Arrays.toString(line));
-////                System.out.println(bufferedReader.readLine());
-//            }
-//            lineCntReader.close();
-//            bufferedReader.close();
-//        }
-//    }

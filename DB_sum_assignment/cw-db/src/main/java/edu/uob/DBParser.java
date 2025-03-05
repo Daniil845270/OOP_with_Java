@@ -30,14 +30,16 @@ public class DBParser {
 
     public DBParser() {
 //        query = command;
-        tokens = new ArrayList<String>();
 //        setup();
         cmdExecuter = new DBCommandHandler();
 //        decideOnCommand();
     }
 
     public void acceptCommand(String command) throws IOException {
+//        System.out.println(command);
+        tokens = new ArrayList<String>();
         query = command;
+//        System.out.println(query);
         setup();
         decideOnCommand();
     }
@@ -60,10 +62,13 @@ public class DBParser {
         }
 
         // Finally, loop through the result array list, printing out each token a line at a time
-//        System.out.println("'The incoming command is'");
+//        System.out.println("--------->The incoming command is");
         tokensNum = tokens.size();
         if (tokensNum < 2) {
             throw new IOException("Command has less than 2 tokens");
+        }
+        if (!tokens.get(tokensNum - 1).equals(";")) {
+            throw new IOException("The command does not end with ';'");
         }
         tokens.set(0, tokens.get(0).toLowerCase());
 
@@ -72,7 +77,7 @@ public class DBParser {
 ////            tokens.set(i, tokens.get(i).toLowerCase());
 //            System.out.println(tokens.get(i));
 //        }
-//        System.out.println("'The end of incoming command'");
+//        System.out.println("<---------The end of incoming command");
     }
 
     private String[] tokenise(String input) {
@@ -96,19 +101,21 @@ public class DBParser {
 
     private void decideOnCommand() throws IOException {
         if (tokens.get(0).equals("create")) {
+//            System.out.println("was here");
             if (tokensNum < 4) {
                 throw new IOException("Create command has less than 4 tokens"); // shortest command is "CREATE " "DATABASE " [DatabaseName] ";"
             }
             for (int i=1; i<3; i++) tokens.set(i, tokens.get(i).toLowerCase()); // put database/table and its name to lowercase, but if the command is  "CREATE " "TABLE " [TableName] "(" <AttributeList> ")",  the attibute list must not be put to lowercase (because an attribute is a name of a column)
-
             if (tokens.get(1).equals("database")) {
-                // does tokens.get(2) even exist?
-//                System.out.println("Creating a database with a name '" + tokens.get(2) + "'");
-                cmdExecuter.createExecution(tokens.get(2).toLowerCase());
+                if ((!tokens.get(3).equals(";")) || (tokensNum > 4)) {
+                    throw new IOException("Create database command does not end with ';'");
+                }
+                cmdExecuter.createDatabase(tokens.get(2));
             } else if (tokens.get(1).equals("table")) {
-                // what to keep in mind when developoing this feature?
-                // 1) the table shouldn't already exist -> pretty much the same piece of code as for the create table -> may try to combine these 2
-//                System.out.println("Creating a table with a name '" + tokens.get(2) + "'");
+//                System.out.println("Table is about to be created");
+                ArrayList<String> table = new ArrayList<>(tokens.subList(2, tokens.size()));
+                System.out.println(table);
+                cmdExecuter.createTable(table);
             }
 
 //            if (tokens.get(1).equals("database")) {
