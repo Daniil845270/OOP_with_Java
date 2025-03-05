@@ -38,6 +38,7 @@ public class DBServer {
             System.out.println("Can't seem to create database storage folder " + storageFolderPath);
         }
         cmdHandler = new DBCommandHandler();
+        dbParser = new DBParser();
     }
 
     /**
@@ -50,16 +51,12 @@ public class DBServer {
 
     public String handleCommand(String command){
         // TODO implement your server logic here
-
         try {
-            dbParser = new DBParser(command);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-
+            dbParser.acceptCommand(command);
+        } catch(IOException ioe) {
+//            System.out.println(ioe.getMessage());
+//            throw new TestingException(ioe.getMessage());
         }
-//        dbParser.setup();
-//        cmdHandler.selectADatabase("secondTestDBfolder");
-
         return "";
     }
 

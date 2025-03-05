@@ -31,11 +31,50 @@ public class ExampleDBTests {
         "Server took too long to respond (probably stuck in an infinite loop)");
     }
 
-    // A basic test that creates a database, creates a table, inserts some test data, then queries it.
-    // It then checks the response to see that a couple of the entries in the table are returned as expected
     @Test
-    public void testBasicCreateAndQuery() {
+    public void testCreateDatabaseOrTableInapropriateCommand() {
         String randomName = generateRandomName();
+        DBParser parser = new DBParser();
+        try {
+            parser.acceptCommand("invalidCommand");
+        } catch (IOException e) {
+            assertEquals("Command has less than 2 tokens", e.getMessage());
+        }
+        try {
+            parser.acceptCommand("command");
+        } catch (IOException e) {
+            assertEquals("Command has less than 2 tokens", e.getMessage());
+        }
+        try {
+            parser.acceptCommand("");
+        } catch (IOException e) {
+            assertEquals("Command has less than 2 tokens", e.getMessage());
+        }
+        // initial test script of create database and table functions
+        try {
+            parser.acceptCommand("CREATE DATABASE firsttestDBfolder ;");
+        } catch (IOException e) {
+            assertEquals("Database or table already exists", e.getMessage());
+        }
+        try {
+            parser.acceptCommand("use firsttestDBfolder ;");
+        } catch (IOException e) {
+            assertEquals("Database or table already exists", e.getMessage());
+        }
+
+    }
+
+//    // A basic test that creates a database, creates a table, inserts some test data, then queries it.
+//    // It then checks the response to see that a couple of the entries in the table are returned as expected
+//    @Test
+//    public void testBasicCreateAndQuery() {
+//        String randomName = generateRandomName();
+//        DBParser parser = new DBParser();
+//        try {
+//            parser.acceptCommand("invalidCommand");
+//        } catch (IOException e) {
+//            assertEquals("Command has less than 2 tokens", e.getMessage());
+//        }
 //        sendCommandToServer("CREATE DATABASE " + randomName + ";");
 //        assertThrows(IOException.class, () -> {sendCommandToServer("USE " + randomName + ";");});
 //        sendCommandToServer("USE " + randomName + ";");
@@ -46,28 +85,31 @@ public class ExampleDBTests {
         /// /////////////////////////////////////////
 //        sendCommandToServer("USE secondtestdbfolder;");
 
-        try {
-            DBParser dbParser = new DBParser("command");
-        } catch (IOException e) {
-            assertEquals("Command has less than 2 tokens", e.getMessage());
-        }
-        try {
-            DBParser dbParser = new DBParser("");
-        } catch (IOException e) {
-            assertEquals("Command has less than 2 tokens", e.getMessage());
-        }
-        // initial test script of create database and table functions
-        try {
-            DBParser dbParser = new DBParser("CREATE DATABASE firsttestDBfolder ;");
-        } catch (IOException e) {
-            assertEquals("Database or table already exists", e.getMessage());
-        }
-        try {
-            DBParser dbParser = new DBParser("use firsttestDBfolder ;");
+//        try {
+//            DBParser dbParser = new DBParser("command");
+//        } catch (IOException e) {
+//            assertEquals("Command has less than 2 tokens", e.getMessage());
+//        }
+//        try {
+//            DBParser dbParser = new DBParser("");
+//        } catch (IOException e) {
+//            assertEquals("Command has less than 2 tokens", e.getMessage());
+//        }
+//        // initial test script of create database and table functions
+//        try {
+//            DBParser dbParser = new DBParser("CREATE DATABASE firsttestDBfolder ;");
+//        } catch (IOException e) {
+//            assertEquals("Database or table already exists", e.getMessage());
+//        }
+//        try {
+//            DBParser dbParser = new DBParser("use firsttestDBfolder ;");
+//
+//        } catch (IOException e) {
+//            assertEquals("Database or table already exists", e.getMessage());
+//        }
 
-        } catch (IOException e) {
-            assertEquals("Database or table already exists", e.getMessage());
-        }
+
+        //remember to refactor this when done with the exception shit
 //        try {
 //            server.handleCommand("use firsttestDBfolder ;");
 //        } catch (IOException e) {
@@ -77,7 +119,7 @@ public class ExampleDBTests {
 
 
 
-    }
+//    }
 //
 //    // A basic test that creates a database, creates a table, inserts some test data, then queries it.
 //    // It then checks the response to see that a couple of the entries in the table are returned as expected

@@ -12,7 +12,7 @@ import java.util.Arrays;
 //none of which is handled at the moment)
 
 public class DBParser {
-    private String query;
+    public String query; // that is an ununcapsulated stuff
     //    String query = "  INSERT  INTO  people   VALUES(  'Simon Lock'  ,35, 'simon@bristol.ac.uk' , 1.8  ) ; ";
     private String[] specialCharacters = {"(",")",",",";"};
     private ArrayList<String> tokens;
@@ -20,29 +20,31 @@ public class DBParser {
     private int tokensNum;
 
 
-    public DBParser(String command) throws IOException {
-        query = command;
-        tokens = new ArrayList<String>();
-        setup();
-        cmdExecuter = new DBCommandHandler();
-        decideOnCommand();
-    }
-
 //    public DBParser(String command) throws IOException {
-////        query = command;
-//        tokens = new ArrayList<String>();
-////        setup();
-//        cmdExecuter = new DBCommandHandler();
-////        decideOnCommand();
-//    }
-//
-//    public void acceptCommand(String command) throws IOException {
 //        query = command;
+//        tokens = new ArrayList<String>();
 //        setup();
+//        cmdExecuter = new DBCommandHandler();
 //        decideOnCommand();
 //    }
 
-    private void setup() throws IOException {
+    public DBParser() {
+//        query = command;
+        tokens = new ArrayList<String>();
+//        setup();
+        cmdExecuter = new DBCommandHandler();
+//        decideOnCommand();
+    }
+
+    public void acceptCommand(String command) throws IOException {
+        query = command;
+        setup();
+        decideOnCommand();
+    }
+
+
+
+    public void setup() throws IOException {
         // Split the query on single quotes (to separate out query text from string literals)
         String[] fragments = query.split("'");
         for (int i=0; i<fragments.length; i++) {
@@ -58,20 +60,19 @@ public class DBParser {
         }
 
         // Finally, loop through the result array list, printing out each token a line at a time
-        System.out.println("'The incoming command is'");
+//        System.out.println("'The incoming command is'");
         tokensNum = tokens.size();
         if (tokensNum < 2) {
             throw new IOException("Command has less than 2 tokens");
         }
         tokens.set(0, tokens.get(0).toLowerCase());
 
-        for(int i=0; i<tokensNum; i++) {
-//            tokens.get(i).toLowerCase();
-//            tokens.set(i, tokens.get(i).toLowerCase());
-            System.out.println(tokens.get(i));
-        }
-        System.out.println("'The end of incoming command'");
-
+//        for(int i=0; i<tokensNum; i++) {
+////            tokens.get(i).toLowerCase();
+////            tokens.set(i, tokens.get(i).toLowerCase());
+//            System.out.println(tokens.get(i));
+//        }
+//        System.out.println("'The end of incoming command'");
     }
 
     private String[] tokenise(String input) {
