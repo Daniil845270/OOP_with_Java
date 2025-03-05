@@ -58,7 +58,6 @@ public class DBServer {
 
         }
 //        dbParser.setup();
-
 //        cmdHandler.selectADatabase("secondTestDBfolder");
 
         return "";

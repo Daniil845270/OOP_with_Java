@@ -31,19 +31,46 @@ public class DBCommandHandler {
     }
 
     // this method needs to check whether the database that I am creating doesn't already exist
-    public void createDatabase(String databaseName) throws IOException {
-        String newDBName = storageFolderPath + File.separator + databaseName;
-        File newDB = new File(newDBName);
-        if (newDB.exists()) {
-            System.out.println("Database already exists");
+    public void createExecution(String databaseName) throws IOException {
+        String newDBorFolderPath;
+        if (currDBFolder == null) {
+            newDBorFolderPath = storageFolderPath + File.separator + databaseName;
         } else {
-            if (!newDB.mkdir()){
-                System.out.println("Unable to create database");
-                throw new IOException("Unable to create database");
-            }
-            System.out.println("Database created");
+            newDBorFolderPath = storageFolderPath + File.separator + currDBFolder + File.separator + databaseName;
         }
+        File newDBorFolder = new File(newDBorFolderPath);
+        if (newDBorFolder.exists()) {
+            throw new IOException("Database or table already exists");
+        }
+//        if (newDB.exists()) {
+//            System.out.println("Database already exists");
+//        } else {
+//            if (!newDB.mkdir()){ // this line create a directory. But if it doesn't for some reason, then it throws an error
+//                System.out.println("Unable to create database");
+//                throw new IOException("Unable to create database");
+//            }
+//            System.out.println("Database created");
+//        }
     }
+
+//    // this method needs to check whether the database that I am creating doesn't already exist
+//    public void createDatabase(String databaseName) throws IOException {
+//        String newDBName = storageFolderPath + File.separator + databaseName;
+//        File newDB = new File(newDBName);
+//        if (newDB.exists()) {
+//            System.out.println("Database already exists");
+//        } else {
+//            if (!newDB.mkdir()){ // this line create a directory. But if it doesn't for some reason, then it throws an error
+//                System.out.println("Unable to create database");
+//                throw new IOException("Unable to create database");
+//            }
+//            System.out.println("Database created");
+//        }
+//    }
+
+//    public void createTable(String tableName) throws IOException {
+//
+//    }
 
     public void useDatabase(String databaseName) throws IOException {
         // first of all, need to check if the database that I want to use actually exists
@@ -56,7 +83,7 @@ public class DBCommandHandler {
         //ok, so the database does exist, now I need to create the in-memory representation of that database
         currDatabase = new DBDataBase(dbToUse);
         System.out.println("Database selected");
-        currDatabase.printDatabase();
+//        currDatabase.printDatabase();
     }
 }
 

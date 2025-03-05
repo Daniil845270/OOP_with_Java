@@ -42,7 +42,40 @@ public class ExampleDBTests {
 //        sendCommandToServer("CREATE DATABASE " + randomName + ";");
 
 //        sendCommandToServer("USE " + randomName + ";");
-        sendCommandToServer("USE secondtestdbfolder;");
+
+        /// /////////////////////////////////////////
+//        sendCommandToServer("USE secondtestdbfolder;");
+
+        try {
+            DBParser dbParser = new DBParser("command");
+        } catch (IOException e) {
+            assertEquals("Command has less than 2 tokens", e.getMessage());
+        }
+        try {
+            DBParser dbParser = new DBParser("");
+        } catch (IOException e) {
+            assertEquals("Command has less than 2 tokens", e.getMessage());
+        }
+        // initial test script of create database and table functions
+        try {
+            DBParser dbParser = new DBParser("CREATE DATABASE firsttestDBfolder ;");
+        } catch (IOException e) {
+            assertEquals("Database or table already exists", e.getMessage());
+        }
+        try {
+            DBParser dbParser = new DBParser("use firsttestDBfolder ;");
+
+        } catch (IOException e) {
+            assertEquals("Database or table already exists", e.getMessage());
+        }
+//        try {
+//            server.handleCommand("use firsttestDBfolder ;");
+//        } catch (IOException e) {
+//            assertEquals("Database or table already exists", e.getMessage());
+//        }
+
+
+
 
     }
 //

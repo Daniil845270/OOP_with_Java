@@ -17,6 +17,7 @@ public class DBParser {
     private String[] specialCharacters = {"(",")",",",";"};
     private ArrayList<String> tokens;
     private DBCommandHandler cmdExecuter;
+    private int tokensNum;
 
 
     public DBParser(String command) throws IOException {
@@ -27,7 +28,21 @@ public class DBParser {
         decideOnCommand();
     }
 
-    private void setup() {
+//    public DBParser(String command) throws IOException {
+////        query = command;
+//        tokens = new ArrayList<String>();
+////        setup();
+//        cmdExecuter = new DBCommandHandler();
+////        decideOnCommand();
+//    }
+//
+//    public void acceptCommand(String command) throws IOException {
+//        query = command;
+//        setup();
+//        decideOnCommand();
+//    }
+
+    private void setup() throws IOException {
         // Split the query on single quotes (to separate out query text from string literals)
         String[] fragments = query.split("'");
         for (int i=0; i<fragments.length; i++) {
@@ -44,7 +59,17 @@ public class DBParser {
 
         // Finally, loop through the result array list, printing out each token a line at a time
         System.out.println("'The incoming command is'");
-        for(int i=0; i<tokens.size(); i++) System.out.println(tokens.get(i));
+        tokensNum = tokens.size();
+        if (tokensNum < 2) {
+            throw new IOException("Command has less than 2 tokens");
+        }
+        tokens.set(0, tokens.get(0).toLowerCase());
+
+        for(int i=0; i<tokensNum; i++) {
+//            tokens.get(i).toLowerCase();
+//            tokens.set(i, tokens.get(i).toLowerCase());
+            System.out.println(tokens.get(i));
+        }
         System.out.println("'The end of incoming command'");
 
     }
@@ -63,15 +88,37 @@ public class DBParser {
         return input.split(" ");
     }
 
+
     // again, this function does not check for malformed commands
     // on thing to keep in mind is that you have to get rid of redundant code -> .equalsIgnoreCase shouldn't even be there
+    // the first letter is always
+
     private void decideOnCommand() throws IOException {
-        if (tokens.get(0).equalsIgnoreCase("create")) {
-            if (tokens.get(1).equalsIgnoreCase("database")) {
-                // does tokens.get(2) even exist?
-                System.out.println("Creating a database with a name '" + tokens.get(2) + "'");
-                cmdExecuter.createDatabase(tokens.get(2).toLowerCase());
+        if (tokens.get(0).equals("create")) {
+            if (tokensNum < 4) {
+                throw new IOException("Create command has less than 4 tokens"); // shortest command is "CREATE " "DATABASE " [DatabaseName] ";"
             }
+            for (int i=1; i<3; i++) tokens.set(i, tokens.get(i).toLowerCase()); // put database/table and its name to lowercase, but if the command is  "CREATE " "TABLE " [TableName] "(" <AttributeList> ")",  the attibute list must not be put to lowercase (because an attribute is a name of a column)
+
+            if (tokens.get(1).equals("database")) {
+                // does tokens.get(2) even exist?
+//                System.out.println("Creating a database with a name '" + tokens.get(2) + "'");
+                cmdExecuter.createExecution(tokens.get(2).toLowerCase());
+            } else if (tokens.get(1).equals("table")) {
+                // what to keep in mind when developoing this feature?
+                // 1) the table shouldn't already exist -> pretty much the same piece of code as for the create table -> may try to combine these 2
+//                System.out.println("Creating a table with a name '" + tokens.get(2) + "'");
+            }
+
+//            if (tokens.get(1).equals("database")) {
+//                // does tokens.get(2) even exist?
+////                System.out.println("Creating a database with a name '" + tokens.get(2) + "'");
+//                cmdExecuter.createDatabase(tokens.get(2).toLowerCase());
+//            } else if (tokens.get(1).equals("table")) {
+//                // what to keep in mind when developoing this feature?
+//                // 1) the table shouldn't already exist -> pretty much the same piece of code as for the create table -> may try to combine these 2
+////                System.out.println("Creating a table with a name '" + tokens.get(2) + "'");
+//            }
         } else if (tokens.get(0).equalsIgnoreCase("use")) {
             cmdExecuter.useDatabase(tokens.get(1).toLowerCase());
         }
