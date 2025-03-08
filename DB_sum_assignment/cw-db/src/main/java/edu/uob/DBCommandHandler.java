@@ -34,23 +34,31 @@ public class DBCommandHandler {
     }
 
     public void createTable(ArrayList<String> newTableName) throws IOException {
-        System.out.println("Was here");
-        System.out.println(currDBName);
+//        System.out.println("Was here");
+//        System.out.println(currDBName);
         if (currDBName == null) throw new IOException("Database not selected");
         String DBorFolderPath = storageFolderPath + File.separator + currDBName;
         String newTablePath = DBorFolderPath + File.separator + newTableName.get(0) + ".tab";
         File newTable = new File(newTablePath);
-        System.out.println("Was here");
+//        System.out.println("Was here");
         if (newTable.exists()) {
-            System.out.println("Was here");
+//            System.out.println("Was here");
             throw new IOException("Table already exists"); //this one is not tested, but I am pretty sure there are not bugs
         } else {
-            System.out.println(newTable.createNewFile());
-            System.out.println("Was here");
-//            if (!newTable.createNewFile()){
-//                System.out.println("!!!!!!!!!!!!!!!!Unable to create database!!!!!!!!!!!!!!");
-//                throw new IOException("!!!!!!!!!!!!!!!!Unable to create database!!!!!!!!!!!!!!"); // no idea how to test this, but i don't think I need
-//            }
+            if (!newTable.createNewFile()){
+                System.out.println("!!!!!!!!!!!!!!!!Unable to create database!!!!!!!!!!!!!!");
+                throw new IOException("!!!!!!!!!!!!!!!!Unable to create database!!!!!!!!!!!!!!"); // no idea how to test this, but i don't think I need
+            }
+            DBTable inMemTable = new DBTable();
+            if (!newTableName.get(1).equals(";")) {
+                ArrayList<String> attributes = new ArrayList<>(newTableName.subList(1, newTableName.size() - 1));
+                inMemTable.fillAttributesIntoArraylists(attributes);
+                inMemTable.writeTableToStorage(newTable);
+                System.out.println("Contents of the new table: ");
+                inMemTable.printTable();
+            }
+            currInMemDatabase.addTable(newTableName.get(0), inMemTable);
+//            currInMemDatabase.printDatabase();
         }
     }
 
@@ -65,8 +73,15 @@ public class DBCommandHandler {
         //ok, so the database does exist, now I need to create the in-memory representation of that database
 
         currInMemDatabase = new DBDataBase(dbToUse);
+
+        //this part is not necessarily needed but it's good to have for sanity check
+        if (currInMemDatabase.isDBempty()){
+            System.out.println("Database is empty");
+        } else {
+            currInMemDatabase.printTableMap();
+        }
         currDBName = databaseName;
-        System.out.println("Database selected: " + currInMemDatabase);
+//        System.out.println("Database selected: " + currInMemDatabase);
 //        currInMemDatabase.printDatabase();
     }
 }

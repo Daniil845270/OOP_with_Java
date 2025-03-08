@@ -114,7 +114,7 @@ public class DBParser {
             } else if (tokens.get(1).equals("table")) {
 //                System.out.println("Table is about to be created");
                 ArrayList<String> table = new ArrayList<>(tokens.subList(2, tokens.size()));
-                System.out.println(table);
+//                System.out.println(table);
                 cmdExecuter.createTable(table);
             }
 
