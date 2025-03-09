@@ -3,6 +3,13 @@ use tolower when the need arises
 
 
 what to do:
-1) find the people.tab file
-2) read from the file (may be line by line)
-3) System.out.printline each read line
+- create directory, use directory and create a file are (mostly) ready
+- SELECT " <WildAttribList> " FROM " [TableName] | "SELECT " <WildAttribList> " FROM " [TableName] " WHERE " <Condition>
+
+
+insert: check if the file exists adn the database is selected in the command handler, not in the parser
+for (String token : tokens.subList(5, tokensNum - 2)) {  // there may not be any attributes, but that's fine for now
+if the table name has an extension in it, I probably should trim it
+if (!currInMemDatabase.containsTable(tableName + ".tab")) { // this may be a bad way to handle the problem of names having/not having extension
+when I write to files check that the files are writable
+when I read from files, check that they are readable

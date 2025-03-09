@@ -43,6 +43,7 @@ public class DBTable {
         for (String attribute : attributes) {
             table.get(0).add(attribute);
         }
+        lineCnt += 1;
     }
 
     public void printTable() {
@@ -53,17 +54,42 @@ public class DBTable {
     }
 
     public void writeTableToStorage(File tableFile) throws IOException {
-        //need to check the boxes regarding throwing exceptions when the program gets into an undesirable state
-        if (tableFile.exists()){
+        if (!tableFile.exists()) {
+            throw new IOException("writeTableToStorage exception: Table file does not exist");
+        } else {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(tableFile));
             for (ArrayList<String> row : table) {
                 String tabSeparatedRow = String.join("\t", row);
                 bufferedWriter.write(tabSeparatedRow);
+                bufferedWriter.newLine();
             }
             bufferedWriter.close();
-        } else {
-            throw new IOException("writeTableToStorage exception: Table file does not exist");
         }
+    }
 
+    public boolean isEmpty() {
+        return table.isEmpty();
+    }
+
+    public int size() { // this is very dangerous, because the file might be empty
+        return table.get(0).size();
+    }
+
+    public void insertFirstLine(ArrayList<String> attributes) {
+        table.add(new ArrayList<>());
+        table.get(0).add("id");
+        for (String attribute : attributes) {
+            table.get(0).add(attribute);
+        }
+        lineCnt += 1;
+    }
+
+    public void insertLineIntoTable(ArrayList<String> attributes) {
+        table.add(new ArrayList<>());
+        lineCnt += 1;
+        table.get(((int) lineCnt) - 1).add(String.valueOf(lineCnt));
+        for (String attribute : attributes) {
+            table.get(((int) lineCnt) - 1).add(attribute);
+        }
     }
 }

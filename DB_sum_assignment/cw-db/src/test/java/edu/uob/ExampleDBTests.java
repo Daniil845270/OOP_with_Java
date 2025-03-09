@@ -32,63 +32,107 @@ public class ExampleDBTests {
     }
 
     @Test
-    public void testCreateTableWithAttributes() {
+    public void testMalformedInsertCommand() {
         String randomName = generateRandomName();
         DBParser parser = new DBParser();
         try {
-            parser.acceptCommand("USE secondtestdbfolder;"); // select a database
+            parser.acceptCommand("USE fIRSTtestdbfolder;"); // select a database
+            parser.acceptCommand("INSERT garbage people VALUES ();");
         } catch (IOException e) {
-            assertEquals("Database file not found", e.getMessage());
-            System.out.println("Test 7 passed");
+            assertEquals("decideOnCommand: insert command malformed", e.getMessage());
+            System.out.println("Test 1 passed");
         }
         try {
-            parser.acceptCommand("create table newlyCreatedTable row1 row2 row3;");
-//            parser.acceptCommand("USE newlyCreatedTestTable;");
+            parser.acceptCommand("INSERT into people VALUES (65, 107, helloworld(;");
         } catch (IOException e) {
-//            System.out.println(e.getMessage());
+            assertEquals("decideOnCommand: insert command malformed", e.getMessage());
+            System.out.println("Test 2 passed");
         }
+        try {
+            parser.acceptCommand("INSERT into people VALUES ();");
+        } catch (IOException e) {
+            assertEquals("decideOnCommand: insert command malformed", e.getMessage());
+            System.out.println("Test 3 passed");
+        }
+        try {
+            parser.acceptCommand("INSERT into people VALUES (,,);");
+        } catch (IOException e) {
+            assertEquals("decideOnCommand: no attributes to insert into table", e.getMessage());
+            System.out.println("Test 4 passed");
+        }
+        try {
+            parser.acceptCommand("INSERT into nonexistentfile VALUES (value1, value2, value3);");
+        } catch (IOException e) {
+            assertEquals("selectCommand: Table to insert files to not found", e.getMessage());
+            System.out.println("Test 5 passed");
+        }
+
+        try {
+            parser.acceptCommand("INSERT into people VALUES (Daniil, 23, myemail);");
+            parser.acceptCommand("create table newtable;");
+            parser.acceptCommand("INSERT into newtable VALUES (Daniil, 23, myemail);");
+        } catch (IOException e) {
+            System.out.println("Test 6 had an exception: " + e.getMessage());
+        }
+
     }
+
+//    @Test
+//    public void testCreateTableWithAttributes() {
+//        String randomName = generateRandomName();
+//        DBParser parser = new DBParser();
+//
+//        try {
+//            parser.acceptCommand("CREATE DATABASE " + "HELLO" + randomName + ";"); // this one should not produce an exception -> it should create a database
+//            parser.acceptCommand("USE " + "HELLO" + randomName + ";");
+//            parser.acceptCommand("create table attibutelessTable;");
+//            parser.acceptCommand("create table attibuteTable row1 row2 row3;");
+//        } catch (IOException e) {
+//            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//            System.out.println(e.getMessage());
+//        }
+//    }
 
 //    @Test
 //    public void testCreateDatabaseOrTableInapropriateCommand() {
 //        String randomName = generateRandomName();
 //        DBParser parser = new DBParser();
-//        try {
-//            parser.acceptCommand("invalidCommand");
-//        } catch (IOException e) {
-//            assertEquals("Command has less than 2 tokens", e.getMessage());
-//            System.out.println("Test 1 passed");
-//        }
-//        try {
-//            parser.acceptCommand("There is no semi-colon in the end of the command");
-//        } catch (IOException e) {
-//            assertEquals("The command does not end with ';'", e.getMessage());
-//            System.out.println("Test 1.5 passed");
-//        }
-//        try {
-//            parser.acceptCommand("");
-//        } catch (IOException e) { // this one doesn't work for some reason, find out later
-//            assertEquals("Command has less than 2 tokens", e.getMessage());
-//            System.out.println("Test 2 passed");
-//        }
-//        try {
-//            parser.acceptCommand("CREATE DATABASE fIRSTtestdbfolder;");
-//        } catch (IOException e) {
-//            assertEquals("Database already exists", e.getMessage());
-//            System.out.println("Test 3 passed");
-//        }
-//        try {
-//            parser.acceptCommand("CREATE DATABASE newDataBase helloworld;");
-//        } catch (IOException e) {
-//            assertEquals("Create database command does not end with ';'", e.getMessage());
-//            System.out.println("Test 4 passed");
-//        }
-//        try {
-//            parser.acceptCommand("CREATE DATABASE newDataBase; helloworld;");
-//        } catch (IOException e) {
-//            assertEquals("Create database command does not end with ';'", e.getMessage());
-//            System.out.println("Test 5 passed");
-//        }
+////        try {
+////            parser.acceptCommand("invalidCommand");
+////        } catch (IOException e) {
+////            assertEquals("Command has less than 2 tokens", e.getMessage());
+////            System.out.println("Test 1 passed");
+////        }
+////        try {
+////            parser.acceptCommand("There is no semi-colon in the end of the command");
+////        } catch (IOException e) {
+////            assertEquals("The command does not end with ';'", e.getMessage());
+////            System.out.println("Test 1.5 passed");
+////        }
+////        try {
+////            parser.acceptCommand("");
+////        } catch (IOException e) { // this one doesn't work for some reason, find out later
+////            assertEquals("Command has less than 2 tokens", e.getMessage());
+////            System.out.println("Test 2 passed");
+////        }
+////        try {
+////            parser.acceptCommand("CREATE DATABASE fIRSTtestdbfolder;");
+////        } catch (IOException e) {
+////            assertEquals("Database already exists", e.getMessage());
+////            System.out.println("Test 3 passed");
+////        }
+////        try {
+////            parser.acceptCommand("CREATE DATABASE newDataBase helloworld;");
+////        } catch (IOException e) {
+////            assertEquals("Create database command does not end with ';'", e.getMessage());
+////            System.out.println("Test 4 passed");
+////        }
+////        try {
+////            parser.acceptCommand("CREATE DATABASE newDataBase; helloworld;");
+////        } catch (IOException e) {
+////            assertEquals("Create database command does not end with ';'", e.getMessage());
+////            System.out.println("Test 5 passed");
+////        }
 //        try {
 //            parser.acceptCommand("CREATE DATABASE " + randomName + ";"); // this one should not produce an exception -> it should create a database
 //        } catch (IOException e) {
@@ -117,15 +161,15 @@ public class ExampleDBTests {
 //        } catch (IOException e) {
 ////            System.out.println(e.getMessage());
 //        }
-//
-////        System.out.println("/////////////////////////////////////////////////////");
 ////
-////        try {
-////            parser.acceptCommand("USE firsttestDBfolder;");
-////
-////        } catch (IOException e) {
-////
-////        }
+//////        System.out.println("/////////////////////////////////////////////////////");
+//////
+//////        try {
+//////            parser.acceptCommand("USE firsttestDBfolder;");
+//////
+//////        } catch (IOException e) {
+//////
+//////        }
 //    }
 
 /// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -38,7 +38,7 @@ public class DBCommandHandler {
 //        System.out.println(currDBName);
         if (currDBName == null) throw new IOException("Database not selected");
         String DBorFolderPath = storageFolderPath + File.separator + currDBName;
-        String newTablePath = DBorFolderPath + File.separator + newTableName.get(0) + ".tab";
+        String newTablePath = DBorFolderPath + File.separator + newTableName.get(0);
         File newTable = new File(newTablePath);
 //        System.out.println("Was here");
         if (newTable.exists()) {
@@ -83,5 +83,37 @@ public class DBCommandHandler {
         currDBName = databaseName;
 //        System.out.println("Database selected: " + currInMemDatabase);
 //        currInMemDatabase.printDatabase();
+    }
+
+    public void insertCommand(String tableName, ArrayList<String> attributes) throws IOException {
+        if (currDBName == null) throw new IOException("Database not selected");
+        if (!currInMemDatabase.containsTable(tableName + ".tab")) { // this may be a bad way to handle the problem of names having/not having extension
+            throw new IOException("selectCommand: Table to insert files to not found");
+        } else {
+//            throw new IOException("selectCommand: Table found");
+            DBTable selectedTable = currInMemDatabase.getTable(tableName + ".tab");
+            if (!selectedTable.isEmpty()) {
+                if (selectedTable.size() - 1 != attributes.size()) {
+                    throw new IOException("selectCommand: attribute size mismatches with current table width");
+                }
+                selectedTable.insertLineIntoTable(attributes);
+            } else {
+                selectedTable.insertFirstLine(attributes);
+            }
+
+            String sep = File.separator;
+            String ssdTablePath = storageFolderPath + sep + currDBName + sep + tableName + ".tab";
+            File ssdTable = new File(ssdTablePath);
+            if (!ssdTable.exists()) {
+                throw new IOException("selectCommand: Table to insert files to not found");
+            } else {
+                selectedTable.writeTableToStorage(ssdTable);
+            }
+
+        }
+
+
+        // I have just realised that I do not need this, because I am working with the in-memory representation of the database, that was created after the use command
+
     }
 }

@@ -1,5 +1,6 @@
 package edu.uob;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -117,18 +118,35 @@ public class DBParser {
 //                System.out.println(table);
                 cmdExecuter.createTable(table);
             }
-
-//            if (tokens.get(1).equals("database")) {
-//                // does tokens.get(2) even exist?
-////                System.out.println("Creating a database with a name '" + tokens.get(2) + "'");
-//                cmdExecuter.createDatabase(tokens.get(2).toLowerCase());
-//            } else if (tokens.get(1).equals("table")) {
-//                // what to keep in mind when developoing this feature?
-//                // 1) the table shouldn't already exist -> pretty much the same piece of code as for the create table -> may try to combine these 2
-////                System.out.println("Creating a table with a name '" + tokens.get(2) + "'");
-//            }
-        } else if (tokens.get(0).equalsIgnoreCase("use")) {
+        } else if (tokens.get(0).equals("use")) {
             cmdExecuter.useDatabase(tokens.get(1).toLowerCase());
+        } else if (tokens.get(0).equals("insert")) {
+            if  (!insertMalformedChecker()) {
+                throw new IOException("decideOnCommand: insert command malformed");
+            } else {
+                String tableName = tokens.get(2).toLowerCase();
+                ArrayList<String> attributes = new ArrayList<>();
+                for (String token : tokens.subList(5, tokensNum - 2)) { // there may not be any attributes, but that's fine for now
+                    if (!token.equals(",")) {
+                        attributes.add(token);
+                    }
+                }
+                if (attributes.isEmpty()) throw new IOException("decideOnCommand: no attributes to insert into table");
+//                System.out.println("tableName: " + tableName);
+//                System.out.println("attributes: " + attributes);
+                cmdExecuter.insertCommand(tableName, attributes);
+            }
         }
+        else {
+            throw new IOException(tokens.get(0) + " is not yet implemented");
+        }
+    }
+
+    private boolean insertMalformedChecker() {
+        return (tokens.get(1).equalsIgnoreCase("into")
+                && tokens.get(3).equalsIgnoreCase("VALUES")
+                && tokens.get(4).equalsIgnoreCase("("))
+                && (!tokens.get(5).equalsIgnoreCase(")")) //there must be at least 1 attribute (at least it think that should be the case)
+                && (tokens.get(tokensNum - 2).equalsIgnoreCase(")")); //-2 because the last token is ;
     }
 }

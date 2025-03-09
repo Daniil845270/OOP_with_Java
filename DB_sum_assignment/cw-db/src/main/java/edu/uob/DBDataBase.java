@@ -1,6 +1,7 @@
 package edu.uob;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class DBDataBase {
@@ -10,9 +11,10 @@ public class DBDataBase {
 
     public DBDataBase(File currDBFolder) throws IOException {
         tableList = currDBFolder.listFiles(); // this is going to be the list
+        System.out.println("tableList: " + Arrays.toString(tableList));
         tableMap = new HashMap<>();
         for (File table : tableList) { //Dereference of 'tableList' should not produce 'NullPointerException', because I ensured that it exists in the function where I call this method
-            System.out.println("Creating a table: " + table.getName());
+//            System.out.println("Creating a table: " + table.getName());
             DBTable inMemTable = new DBTable();
             inMemTable.readTableFromStorage(table);
             tableMap.put(table.getName(), inMemTable);
@@ -37,6 +39,14 @@ public class DBDataBase {
     public void printTableMap() {
         tableMap.forEach((key, value) -> {value.printTable();
             System.out.println("here is a tble");});
+    }
+
+    public boolean containsTable(String tableName) {
+        return tableMap.containsKey(tableName);
+    }
+
+    public DBTable getTable(String tableName) {
+        return tableMap.get(tableName);
     }
 
     //need to adapt a selectTable form handleIncomingCommand method
