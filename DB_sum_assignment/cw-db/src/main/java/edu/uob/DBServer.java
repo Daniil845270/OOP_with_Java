@@ -54,7 +54,7 @@ public class DBServer {
         try {
             dbParser.acceptCommand(command);
         } catch(IOException ioe) {
-//            System.out.println(ioe.getMessage());
+            System.out.println(ioe.getMessage());
 //            throw new TestingException(ioe.getMessage());
         }
         return "";

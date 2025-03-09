@@ -52,7 +52,8 @@ public class DBCommandHandler {
             DBTable inMemTable = new DBTable();
             if (!newTableName.get(1).equals(";")) {
                 ArrayList<String> attributes = new ArrayList<>(newTableName.subList(1, newTableName.size() - 1));
-                inMemTable.fillAttributesIntoArraylists(attributes);
+                System.out.println("attributes: " + attributes);
+                inMemTable.insertFirstLine(attributes);
                 inMemTable.writeTableToStorage(newTable);
                 System.out.println("Contents of the new table: ");
                 inMemTable.printTable();
@@ -87,8 +88,8 @@ public class DBCommandHandler {
 
     public void insertCommand(String tableName, ArrayList<String> attributes) throws IOException {
         if (currDBName == null) throw new IOException("Database not selected");
-        currInMemDatabase.printDatabase();
-        System.out.println("table i'm trying to find (without .tab) is " + tableName);
+//        currInMemDatabase.printDatabase();
+//        System.out.println("table i'm trying to find (without .tab) is " + tableName);
         if (!currInMemDatabase.containsTable(tableName + ".tab")) { // this may be a bad way to handle the problem of names having/not having extension
             throw new IOException("selectCommand: Table to insert files to not found");
         } else {

@@ -113,8 +113,19 @@ public class DBParser {
                 }
                 cmdExecuter.createDatabase(tokens.get(2));
             } else if (tokens.get(1).equals("table")) {
+//                if ((!tokens.get(3).equals(";")) || (!tokens.get(3).equals("(")) || (!tokens.get(tokensNum - 2).equals(")"))) { //don't really know how to make this right, think later
+//                    throw new IOException("Create table command is malformed");
+//                }
 //                System.out.println("Table is about to be created");
-                ArrayList<String> table = new ArrayList<>(tokens.subList(2, tokens.size()));
+//                ArrayList<String> table = new ArrayList<>(tokens.subList(2, tokens.size()));
+                ArrayList<String> table = new ArrayList<>();
+                table.add(tokens.get(2)); // adding the name to the string
+                for (String attribute : tokens.subList(4, tokensNum - 1)) {
+//                    System.out.println("I am going to put " + attribute);
+                    if (!attribute.equals(",")) {
+                        table.add(attribute);
+                    }
+                }
 //                System.out.println(table);
                 cmdExecuter.createTable(table);
             }

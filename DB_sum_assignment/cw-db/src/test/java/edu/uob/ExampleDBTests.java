@@ -223,24 +223,24 @@ public class ExampleDBTests {
 
 //    }
 //
-//    // A basic test that creates a database, creates a table, inserts some test data, then queries it.
-//    // It then checks the response to see that a couple of the entries in the table are returned as expected
-//    @Test
-//    public void testBasicCreateAndQuery() {
-//        String randomName = generateRandomName();
-//        sendCommandToServer("CREATE DATABASE " + randomName + ";");
-//        sendCommandToServer("USE " + randomName + ";");
-//        sendCommandToServer("CREATE TABLE marks (name, mark, pass);");
-//        sendCommandToServer("INSERT INTO marks VALUES ('Simon', 65, TRUE);");
-//        sendCommandToServer("INSERT INTO marks VALUES ('Sion', 55, TRUE);");
-//        sendCommandToServer("INSERT INTO marks VALUES ('Rob', 35, FALSE);");
-//        sendCommandToServer("INSERT INTO marks VALUES ('Chris', 20, FALSE);");
+    // A basic test that creates a database, creates a table, inserts some test data, then queries it.
+    // It then checks the response to see that a couple of the entries in the table are returned as expected
+    @Test
+    public void testBasicCreateAndQuery() {
+        String randomName = generateRandomName();
+        sendCommandToServer("CREATE DATABASE " + randomName + ";");
+        sendCommandToServer("USE " + randomName + ";");
+        sendCommandToServer("CREATE TABLE marks (name, mark, pass);");
+        sendCommandToServer("INSERT INTO marks VALUES ('Simon', 65, TRUE);");
+        sendCommandToServer("INSERT INTO marks VALUES ('Sion', 55, TRUE);");
+        sendCommandToServer("INSERT INTO marks VALUES ('Rob', 35, FALSE);");
+        sendCommandToServer("INSERT INTO marks VALUES ('Chris', 20, FALSE);");
 //        String response = sendCommandToServer("SELECT * FROM marks;");
 //        assertTrue(response.contains("[OK]"), "A valid query was made, however an [OK] tag was not returned");
 //        assertFalse(response.contains("[ERROR]"), "A valid query was made, however an [ERROR] tag was returned");
 //        assertTrue(response.contains("Simon"), "An attempt was made to add Simon to the table, but they were not returned by SELECT *");
 //        assertTrue(response.contains("Chris"), "An attempt was made to add Chris to the table, but they were not returned by SELECT *");
-//    }
+    }
 //
 //    // A test to make sure that querying returns a valid ID (this test also implicitly checks the "==" condition)
 //    // (these IDs are used to create relations between tables, so it is essential that suitable IDs are being generated and returned !)
