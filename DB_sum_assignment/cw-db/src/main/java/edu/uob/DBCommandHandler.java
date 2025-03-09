@@ -39,15 +39,15 @@ public class DBCommandHandler {
         if (currDBName == null) throw new IOException("Database not selected");
         String DBorFolderPath = storageFolderPath + File.separator + currDBName;
         String newTablePath = DBorFolderPath + File.separator + newTableName.get(0);
-        File newTable = new File(newTablePath);
+        File newTable = new File(newTablePath + ".tab");
 //        System.out.println("Was here");
         if (newTable.exists()) {
 //            System.out.println("Was here");
             throw new IOException("Table already exists"); //this one is not tested, but I am pretty sure there are not bugs
         } else {
             if (!newTable.createNewFile()){
-                System.out.println("!!!!!!!!!!!!!!!!Unable to create database!!!!!!!!!!!!!!");
-                throw new IOException("!!!!!!!!!!!!!!!!Unable to create database!!!!!!!!!!!!!!"); // no idea how to test this, but i don't think I need
+                System.out.println("!!!!!!!!!!!!!!!!Unable to create table!!!!!!!!!!!!!!");
+                throw new IOException("!!!!!!!!!!!!!!!!Unable to create table!!!!!!!!!!!!!!"); // no idea how to test this, but i don't think I need
             }
             DBTable inMemTable = new DBTable();
             if (!newTableName.get(1).equals(";")) {
@@ -57,7 +57,7 @@ public class DBCommandHandler {
                 System.out.println("Contents of the new table: ");
                 inMemTable.printTable();
             }
-            currInMemDatabase.addTable(newTableName.get(0), inMemTable);
+            currInMemDatabase.addTable(newTableName.get(0) + ".tab", inMemTable);
 //            currInMemDatabase.printDatabase();
         }
     }
@@ -87,6 +87,8 @@ public class DBCommandHandler {
 
     public void insertCommand(String tableName, ArrayList<String> attributes) throws IOException {
         if (currDBName == null) throw new IOException("Database not selected");
+        currInMemDatabase.printDatabase();
+        System.out.println("table i'm trying to find (without .tab) is " + tableName);
         if (!currInMemDatabase.containsTable(tableName + ".tab")) { // this may be a bad way to handle the problem of names having/not having extension
             throw new IOException("selectCommand: Table to insert files to not found");
         } else {
